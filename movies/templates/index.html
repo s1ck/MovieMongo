@@ -1,7 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div id="search">
+  <input type="text" name="search" value="Search movie.." />
+  <button class="btn">My Movies</button>
 
-	<h1>Hello, are you?</h1>
-	
+  <ul class="thumbnails">
+    <li class="span4">
+      <div class="thumbnail">
+	<img src="http://placehold.it/300x200" alt="" />
+	<h3>Thumbnail label</h3>
+	<p>Thumbnail caption...</p>
+      </div>
+    </li>
+  </ul>
+</div>
 {% endblock %}
