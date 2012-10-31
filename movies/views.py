@@ -1,5 +1,7 @@
-from bottle import route
+from bottle import route, TEMPLATE_PATH, jinja2_template as template
 
-@route('/hello')
-def hello():
-    return "Hello World!"
+TEMPLATE_PATH.append("./movies/templates")
+
+@route('/')
+def index():
+    return template("index.html")
