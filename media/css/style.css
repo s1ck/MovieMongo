@@ -1,8 +1,20 @@
 body {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 20px auto auto auto;
 }
 
 div#search{
     text-align: center;
+    }
+
+.icon-ok{
+    color: green;
+}
+
+.icon-plus{
+    color:red;
+    }
+
+.icon-plus:hover{
+    color:green;
     }
