@@ -7,24 +7,33 @@
 		<link rel="stylesheet" href="media/css/font-awesome.css" />
 		<link type="text/css" rel="stylesheet" href="/media/css/style.css" media="screen"/>
 
-		<title> Sample Bottle App </title>
+		<title>MovieMongo</title>
 	</head>
 
 	<body>
+	  <div class="container">
 	  <div class="navbar">
 	    <div class="navbar-inner">
-              <div class="container">
-		<a class="brand" href="#"><i class="icon-film"></i> Project name</a>
-		<div class="nav-collapse collapse">
-		  <ul class="nav">
+              <div class="container row-fluid">
+		<span class="span4 brand">
+		  <i class="icon-film"></i>
+		  <span style="color:#fba53b">Movie</span><span style="color:#3c91fa">Mongo</span>
+		</span>
+		<div class="span4">
+		{% block navbar_extra %}{% endblock %}
+		</div>
+		<div class="span4 nav-collapse collapse">
+		  <ul class="nav pull-right">
 		    <li><a href="#contact">About</a></li>
 		  </ul>
 		</div>
               </div>
 	    </div>
+
 	  </div>
-	  <div class="container">
+	  <div >
 		{% block content %} {% endblock %}	
+	  </div>
 	  </div>
 	</body>
 

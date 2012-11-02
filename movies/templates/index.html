@@ -1,11 +1,21 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div id="search">
-  <input type="text" name="search" class="input-xlarge" value="Search movie.." />
-  <button class="btn">My Movies</button>
+{% block navbar_extra %}
+<div class="btn-group">
+  <form class="navbar-form">
+    <button class="btn"><i class="icon-home"></i></button>&nbsp;
+    <div class="btn-group input-append" style="display:inline;margin-left:10px;">
+      <input type="text" class="btn xxlarge" placeholder="Search..." />
+      <button class="btn btn-success">
+	<i class="icon-search"></i>
+      </button>
+    </div>
+  </form>
 </div>
 
+{% endblock %}
+
+{% block content %}
 <div class="results">
   <ul class="media-list">
     <li class="media thumbnail">
