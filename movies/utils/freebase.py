@@ -2,12 +2,13 @@
 
 from apiclient import discovery
 
+from movies import settings
 
 class FreebaseWrapper(object):
-    def __init__(self, google_api_key):
-        self.__google_api_key = google_api_key
+    def __init__(self):
+        self.__google_api_key = settings.GOOGLE_API_KEY
         self.__freebase = discovery.build('freebase', 'v1',
-                developerKey=google_api_key)
+                developerKey=settings.GOOGLE_API_KEY)
 
     def get_film_by_name(self, name):
         query = [{'name~=': name, # LIKE "%name"
