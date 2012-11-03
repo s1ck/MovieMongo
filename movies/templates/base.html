@@ -1,35 +1,39 @@
+<!DOCTYPE HTML>
 <html>
 	<head> 
-		
-		<script src="http://code.jquery.com/jquery-latest.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js" ></script>
+		<script type="text/javascript" src="/media/js/bootstrap.min.js"></script>
 		<link href="/media/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+		<link rel="stylesheet" href="media/css/font-awesome.css" />
 		<link type="text/css" rel="stylesheet" href="/media/css/style.css" media="screen"/>
-		<script src="/media/js/bootstrap.min.js"></script>
-		<title> Sample Bottle App </title>
+
+		<title>MovieMongo</title>
 	</head>
 
 	<body>
+	  <div class="container">
 	  <div class="navbar">
 	    <div class="navbar-inner">
-              <div class="container">
-		<!-- <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> -->
-		<!--   <span class="icon-bar"></span> -->
-		<!--   <span class="icon-bar"></span> -->
-		<!--   <span class="icon-bar"></span> -->
-		<!-- </a> -->
-		<a class="brand" href="#">Project name</a>
-		<div class="nav-collapse collapse">
-		  <ul class="nav">
-		    <!-- <li class="active"><a href="#">Search</a></li> -->
-		    <!-- <li><a href="#about">My movies</a></li> -->
+              <div class="container row-fluid">
+		<span class="span4 brand">
+		  <i class="icon-film"></i>
+		  <span style="color:#fba53b">Movie</span><span style="color:#3c91fa">Mongo</span>
+		</span>
+		<div class="span4">
+		{% block navbar_extra %}{% endblock %}
+		</div>
+		<div class="span4 nav-collapse collapse">
+		  <ul class="nav pull-right">
 		    <li><a href="#contact">About</a></li>
 		  </ul>
 		</div>
               </div>
 	    </div>
+
 	  </div>
-	  <div class="container">
+	  <div >
 		{% block content %} {% endblock %}	
+	  </div>
 	  </div>
 	</body>
 

@@ -9,9 +9,9 @@ from pymongo import Connection
 connection = Connection('localhost', 27017)
 db = connection.wcm12
 
-# connect to freebase using google api key
+# connect to freebase
 from movies.utils.freebase import FreebaseWrapper
-freebase = FreebaseWrapper(sys.argv[1])
+freebase = FreebaseWrapper()
 
 # @route('/media/<filename>')
 # def server_static(filename):

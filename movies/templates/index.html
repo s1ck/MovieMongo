@@ -1,18 +1,60 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div id="search">
-  <input type="text" name="search" value="Search movie.." />
-  <button class="btn">My Movies</button>
+{% block navbar_extra %}
+<div class="btn-group">
+  <form class="navbar-form">
+    <button class="btn"><i class="icon-home"></i></button>&nbsp;
+    <div class="btn-group input-append" style="display:inline;margin-left:10px;">
+      <input type="text" class="btn xxlarge" placeholder="Search..." />
+      <button class="btn btn-success">
+	<i class="icon-search"></i>
+      </button>
+    </div>
+  </form>
+</div>
 
-  <ul class="thumbnails">
-    <li class="span4">
-      <div class="thumbnail">
-	<img src="http://placehold.it/300x200" alt="" />
-	<h3>Thumbnail label</h3>
-	<p>Thumbnail caption...</p>
+{% endblock %}
+
+{% block content %}
+<div class="results">
+  <ul class="media-list">
+    <li class="media thumbnail">
+      <a class="pull-left" href="#">
+	<img class="media-object" src="http://placehold.it/250x150" />
+      </a>
+      <div class="media-body">
+	<h3 class="media-heading">The Matrix<i class="icon-ok"></i></h3>
+	<p>The Matrix is a 1999 American science fiction action film written and directed by Larry and Andy Wachowski.</p>
       </div>
     </li>
+    <li class="media thumbnail">
+      <a class="pull-left" href="#">
+	<img class="media-object" src="http://placehold.it/250x150" />
+      </a>
+      <div class="media-body">
+	<h3 class="media-heading">Example<i class="icon-plus"></i></h3>
+	<p>The Matrix is a 1999 American science fiction action film written and directed by Larry and Andy Wachowski.</p>
+      </div>
+    </li>
+    <li class="media thumbnail">
+      <a class="pull-left" href="#">
+	<img class="media-object" src="http://placehold.it/250x150" />
+      </a>
+      <div class="media-body">
+	<h3 class="media-heading">Example<i class="icon-plus"></i></h3>
+	<p>The Matrix is a 1999 American science fiction action film written and directed by Larry and Andy Wachowski.</p>
+      </div>
+    </li>
+    <li class="media thumbnail">
+      <a class="pull-left" href="#">
+	<img class="media-object" src="http://placehold.it/250x150" />
+      </a>
+      <div class="media-body">
+	<h3 class="media-heading">Example<i class="icon-plus"></i></h3>
+	<p>The Matrix is a 1999 American science fiction action film written and directed by Larry and Andy Wachowski.</p>
+      </div>
+    </li>
+    
   </ul>
 </div>
 {% endblock %}
