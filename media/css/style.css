@@ -1,5 +1,4 @@
 body {
-    max-width: 1000px;
     margin: 20px auto auto auto;
 }
 
@@ -7,14 +6,19 @@ div#search{
     text-align: center;
     }
 
-.icon-ok{
+#results .icon-ok{
     color: green;
 }
 
-.icon-plus{
-    color:red;
+#results .icon-plus{
+    color: red;
     }
 
-.icon-plus:hover{
-    color:green;
+#results .icon-plus:hover{
+    color: green;
     }
+
+.navbar i{
+    font-size: 1.2em;
+    vertical-align: middle;
+}

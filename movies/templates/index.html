@@ -3,9 +3,9 @@
 {% block navbar_extra %}
 <div class="btn-group">
   <form class="navbar-form">
-    <button class="btn"><i class="icon-home"></i></button>&nbsp;
+    <button class="btn" title="My movies"><i class="icon-home"></i></button>&nbsp;
     <div class="btn-group input-append" style="display:inline;margin-left:10px;">
-      <input type="text" class="btn xxlarge" placeholder="Search..." />
+      <input type="text" class="xxlarge" placeholder="Search for movie..." />
       <button class="btn btn-success">
 	<i class="icon-search"></i>
       </button>
@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="results">
+<div id="results">
   <ul class="media-list">
     <li class="media thumbnail">
       <a class="pull-left" href="#">
