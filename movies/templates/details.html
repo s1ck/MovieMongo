@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block navbar_extra %}
+<ul class="breadcrumb">
+  <li><a href="/"><i class="icon-home"></i>Home</a> <span class="divider">/</span></li>
+  <li class="active">Details</li>
+</ul>
+{% endblock %}
+
+{% block content %}
+  <script type="text/javascript">
+  $().ready(function(){
+    $.ajax({
+      url: "http://localhost:8080/The%20matrix",
+      headers: {Accept:"application/json"},
+      success: function(data){
+	console.log(data);
+	$("#details").append("<pre>"+data.result+"</pre>");
+      }
+    });
+  });
+  </script>
+  <div id="details">
+    
+  </div>
+{% endblock %}
