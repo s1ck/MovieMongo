@@ -1,12 +1,86 @@
 {% extends "base.html" %}
 
+{% block extra_head %}
+  <script type="text/javascript">
+  $(document).ready(function(){
+        
+    $(this).ajaxStart(function(){
+      $("#results").empty();
+      $("#results").before("<div id='overlay'><img src='/media/img/ajax-loader.gif' /></div>");
+    });
+
+    $(this).ajaxStop(function(){
+      $("#overlay").remove();
+    });
+    
+    $("#search").submit(function(event){
+      event.preventDefault();
+      $.ajax({
+	url: "http://localhost:8080/",
+	data: {search: $("#searchterm").val()},
+	success: function(data){
+	  console.log(data);
+	  if (data.result.length == 0)
+	    $("#results").append("<h2>no results</h2>");
+	  else{
+	    $("#results").append("<ul class='media-list'>");
+	    for (result in data.result){
+	      media_res = format_result(data.result[result]);
+	      $("#results ul.media-list").append(media_res);
+	    }
+	  }
+	}
+      });
+    });
+    
+    $("#mymovies").click(function(event){
+      get_my_movies();
+    });
+
+    function format_result(result){
+      return "<li class='media thumbnail'>"
+	+ "<div class='media-body'>"
+	+ "  <a class='pull-left' href='"+result.name+"'>"
+	+ "    <img class='media-object' src='http://placehold.it/250x150' /> "
+	+ "  </a>"
+	+ "  <h3 class='media-heading'>"+result.name+"</h3>"
+	+ "</div>"
+	+ "</li>";
+    }
+
+    function get_my_movies(){
+      $.ajax({
+	url: "http://localhost:8080/",
+	headers: {Accept:"application/json"},
+	success: function(data){
+	  console.log(data);
+	  if (data.result.length == 0)
+	    $("#results").append("<h2>you have no films in your collection</h2>");
+	  else{
+	    $("#results").append("<ul class='media-list'>");
+	    for (result in data.result){
+	      result = data.result[result];
+	      media_res = format_result(result);
+	      $("#results ul.media-list").append(media_res);
+	    }
+	  }
+	}
+      });
+    }
+    
+    get_my_movies();
+  });
+
+  </script>
+{% endblock %}
+
 {% block navbar_extra %}
-<div class="btn-group">
-  <form class="navbar-form">
-    <button class="btn" title="My movies"><i class="icon-home"></i></button>&nbsp;
+<div class="btn-group input-append">
+  <button class="btn" id="mymovies" title="My movies"><i class="icon-home"></i></button>&nbsp;
+  <form id="search" class="navbar-form" style="display:inline">
     <div class="btn-group input-append" style="display:inline;margin-left:10px;">
-      <input type="text" class="xxlarge" placeholder="Search for movie..." />
-      <button class="btn btn-success">
+      <input type="text" id="searchterm" class="xxlarge" placeholder="Search for movie..." />
+      <button type="submit" class="btn btn-success">
 	<i class="icon-search"></i>
       </button>
     </div>
@@ -17,44 +91,25 @@
 
 {% block content %}
 <div id="results">
-  <ul class="media-list">
-    <li class="media thumbnail">
-      <a class="pull-left" href="#">
-	<img class="media-object" src="http://placehold.it/250x150" />
-      </a>
-      <div class="media-body">
-	<h3 class="media-heading">The Matrix<i class="icon-ok"></i></h3>
-	<p>The Matrix is a 1999 American science fiction action film written and directed by Larry and Andy Wachowski.</p>
-      </div>
-    </li>
-    <li class="media thumbnail">
-      <a class="pull-left" href="#">
-	<img class="media-object" src="http://placehold.it/250x150" />
-      </a>
-      <div class="media-body">
-	<h3 class="media-heading">Example<i class="icon-plus"></i></h3>
-	<p>The Matrix is a 1999 American science fiction action film written and directed by Larry and Andy Wachowski.</p>
-      </div>
-    </li>
-    <li class="media thumbnail">
-      <a class="pull-left" href="#">
-	<img class="media-object" src="http://placehold.it/250x150" />
-      </a>
-      <div class="media-body">
-	<h3 class="media-heading">Example<i class="icon-plus"></i></h3>
-	<p>The Matrix is a 1999 American science fiction action film written and directed by Larry and Andy Wachowski.</p>
-      </div>
-    </li>
-    <li class="media thumbnail">
-      <a class="pull-left" href="#">
-	<img class="media-object" src="http://placehold.it/250x150" />
-      </a>
-      <div class="media-body">
-	<h3 class="media-heading">Example<i class="icon-plus"></i></h3>
-	<p>The Matrix is a 1999 American science fiction action film written and directed by Larry and Andy Wachowski.</p>
-      </div>
-    </li>
-    
-  </ul>
+  <!-- <ul class="media-list"> -->
+  <!--   <li class="media thumbnail"> -->
+  <!--     <a class="pull-left" href="/The%20matrix"> -->
+  <!-- 	<img class="media-object" src="http://placehold.it/250x150" /> -->
+  <!--     </a> -->
+  <!--     <div class="media-body"> -->
+  <!-- 	<h3 class="media-heading">The Matrix<i class="icon-ok"></i></h3> -->
+  <!-- 	<p>The Matrix is a 1999 American science fiction action film written and directed by Larry and Andy Wachowski.</p> -->
+  <!--     </div> -->
+  <!--   </li> -->
+  <!--   <li class="media thumbnail"> -->
+  <!--     <a class="pull-left" href="#"> -->
+  <!-- 	<img class="media-object" src="http://placehold.it/250x150" /> -->
+  <!--     </a> -->
+  <!--     <div class="media-body"> -->
+  <!-- 	<h3 class="media-heading">Example<i class="icon-plus"></i></h3> -->
+  <!-- 	<p>The Matrix is a 1999 American science fiction action film written and directed by Larry and Andy Wachowski.</p> -->
+  <!--     </div> -->
+  <!--   </li> -->
+  <!-- </ul> -->
 </div>
 {% endblock %}

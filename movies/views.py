@@ -24,13 +24,16 @@ def index():
     user or the results of a search.
     """
     if "search" in request.params:
+        # TODO query generic mediator
         freebase = FreebaseWrapper()
         films = freebase.get_film_by_name(request.params["search"])
         return films
     else:
         if request.headers['accept'] == "application/json":
             # TODO get user movies
-            pass
+            freebase = FreebaseWrapper()
+            films = freebase.get_film_by_name("The Matrix")
+            return films
         else:
             return template("index.html")
 
@@ -40,6 +43,7 @@ def get_movie(id):
     This method delivers all the details available for a given movie.
     """
     if request.headers['accept'] == "application/json":
+        # TODO query local db data
         freebase = FreebaseWrapper()
         films = freebase.get_film_by_name(id)
         return films

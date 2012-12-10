@@ -22,3 +22,8 @@ div#search{
     font-size: 1.2em;
     vertical-align: middle;
 }
+
+#overlay{
+    text-align: center;
+    margin-top: 200px;
+    }
