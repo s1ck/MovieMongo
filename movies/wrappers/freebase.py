@@ -15,6 +15,9 @@ class FreebaseWrapper(BaseWrapper):
         self.__freebase = discovery.build('freebase', 'v1',
                 developerKey=settings.GOOGLE_API_KEY)
 
+    def get_name(self):
+        return "freebase"
+
     def get_films_by_name(self, name):
         query = [{
             'name~=': name,  # LIKE "%name"
@@ -64,8 +67,9 @@ class FreebaseWrapper(BaseWrapper):
                         val = method(val)
                     normalized_key = mappings[key][0]
                     normalized_res[normalized_key] = val
+                    normalized_res['source'] = self.get_name()
             results.append(normalized_res)
-        return {'result': results, 'source': 'freebase'}
+        return {'result': results}
 
     def _get_year(self, date_val):
         """

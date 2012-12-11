@@ -9,7 +9,7 @@ from bottle import app, run, route
 from movies import views
 from beaker.middleware import SessionMiddleware
 
-# Cork uses Beaker for sessions. 
+# Cork uses Beaker for sessions.
 # Define how we want our sessions
 session_opts = {
    'session.type': 'cookie',

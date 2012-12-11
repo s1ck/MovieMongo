@@ -9,3 +9,6 @@ class BaseWrapper(object):
     def get_films_by_name(self, name):
         raise NotImplementedError
 
+    def get_name(self):
+        """Returns the unique name of the wrapper"""
+        raise NotImplementedError

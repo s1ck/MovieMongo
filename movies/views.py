@@ -1,30 +1,33 @@
+# -*- coding: utf-8 -*-
 import sys
 import re
 import json
 
 from bottle import static_file, redirect, request, route, TEMPLATE_PATH, jinja2_template as template
-from movies.utils.freebase import FreebaseWrapper
+from movies.mediator import Mediator
+from movies.wrappers.freebase import FreebaseWrapper
 from movies.wrappers.mongodb import MongoDBWrapper
 from utils.cork import Cork
 from utils.cork.mongo_backend import MongoDbBackend
+from movies import settings
 
 TEMPLATE_PATH.append("./movies/templates")
 
-# setup mongodb (connect to wcm12 database)
-from pymongo import Connection
-connection = Connection('localhost', 27017)
-db = connection.wcm12
-
 backend = MongoDbBackend(
-   server = "localhost",
-   port = 27017,
-   database = "wcm12",
+   server = settings.MONGO_HOST,
+   port = settings.MONGO_PORT,
+   database = settings.MONGO_DB,
    initialize=False,
    users_store="users",
    roles_store="roles",
    pending_regs_store="register",
 )
 aaa = Cork(backend)
+
+mediator = Mediator()
+mediator.add_wrapper(MongoDBWrapper(settings.MONGO_HOST, settings.MONGO_PORT))
+mediator.add_wrapper(FreebaseWrapper())
+
 
 @route('/media/:path#.+#', name='static')
 def static(path):
@@ -43,24 +46,11 @@ def index():
 
     if "search" in request.params:
         search = request.params['search']
-
-        # TODO the following has to be done by the mediator
-        # search mongo first
-        mongo = MongoDBWrapper('localhost', 27017)
-        films = mongo.get_films_by_name(search)
-
-        # search the APIs
-        # freebase
-        freebase = FreebaseWrapper()
-        films['result'] += freebase.get_film_by_name(search)['result']
-        # TODO query generic mediator
-        return films
+        return mediator.get_films_by_name(search)
     else:
         if request.headers['accept'] == "application/json":
             # TODO get user movies
-            freebase = FreebaseWrapper()
-            films = freebase.get_film_by_name("The Matrix")
-            return films
+            return mediator.get_films_by_name('Matrix')
         else:
             return template("index.html", user=aaa.current_user.username)
 
