@@ -9,3 +9,5 @@ class BaseWrapper(object):
     def get_films_by_name(self, name):
         raise NotImplementedError
 
+    def get_film_by_id(self, film_id):
+        raise NotImplementedError

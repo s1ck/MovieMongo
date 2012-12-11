@@ -64,8 +64,9 @@ class FreebaseWrapper(BaseWrapper):
                         val = method(val)
                     normalized_key = mappings[key][0]
                     normalized_res[normalized_key] = val
+                    normalized_res['source'] = 'freebase'
             results.append(normalized_res)
-        return {'result': results, 'source': 'freebase'}
+        return {'result': results}
 
     def _get_year(self, date_val):
         """
