@@ -15,6 +15,9 @@ class FreebaseWrapper(BaseWrapper):
         self.__freebase = discovery.build('freebase', 'v1',
                 developerKey=settings.GOOGLE_API_KEY)
 
+    def get_name(self):
+        return "freebase"
+
     def get_films_by_name(self, name):
         query = [{
             'name~=': name,  # LIKE "%name"

@@ -1,4 +1,5 @@
-﻿import json
+﻿# -*- coding: utf-8 -*-
+import json
 
 from apiclient import discovery
 
