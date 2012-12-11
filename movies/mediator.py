@@ -17,7 +17,9 @@ class Mediator(object):
         return films
 
     def get_film_by_id(self, film_id, source):
-        pass
+        if source in wrappers:
+            return wrappers[source].get_film_by_id(film_id)
+        return None
 
 
 

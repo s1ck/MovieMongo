@@ -22,10 +22,16 @@ class MongoDBWrapper(BaseWrapper):
             films['result'].append(self.normalize(doc))
         return films
 
+    def get_film_by_id(self, film_id):
+        return self.__db.movie.find_one({'_id': film_id})
+
+
     def normalize(self, film):
         # select first embedded document which is already normalized to the
         # global schema
+        film_id = film['_id']
         film = film['data'][0].values()[0]
+        film['id'] = film_id
         film['source'] = self.get_name()
         return film
 
