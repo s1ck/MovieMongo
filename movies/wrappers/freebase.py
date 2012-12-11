@@ -40,6 +40,27 @@ class FreebaseWrapper(BaseWrapper):
                 .mqlread(query=json.dumps(query)).execute())
         return self._normalize(response)
 
+    def get_film_by_id(self, film_id):
+        query = [{
+            'id': film_id,
+            'name': None,  # MUST have name
+            'type': '/film/film',  # must be of type film
+            'genre': [],
+            'initial_release_date': [],
+            'written_by': [],
+            'directed_by': [],
+            'starring': [{
+                'actor': {'name': None}
+            }],
+            'key': [{
+                'namespace': None,
+                'value': None
+            }],
+        }]
+        response = json.loads(self.__freebase
+                .mqlread(query=json.dumps(query)).execute())
+        return self._normalize(response)
+
     def get_name(self):
         return 'freebase'
 
