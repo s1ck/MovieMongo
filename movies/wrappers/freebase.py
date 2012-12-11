@@ -53,8 +53,9 @@ class FreebaseWrapper(BaseWrapper):
         }
 
         mapping_keys = mappings.keys()
-        results = {}
+        results = []
         for result in response['result']:
+            normalized_res = {}
             for key in result:
                 if key in mapping_keys:
                     val = result[key]
@@ -62,13 +63,16 @@ class FreebaseWrapper(BaseWrapper):
                         method = mappings[key][1]
                         val = method(val)
                     normalized_key = mappings[key][0]
-                    results[normalized_key] = val
-        return results
+                    normalized_res[normalized_key] = val
+            results.append(normalized_res)
+        return {'result': results, 'source': 'freebase'}
 
     def _get_year(self, date_val):
         """
         :param date_val: sth like this: [u'1979-08-17']
         """
+        if len(date_val) == 0:
+            return None
         date_str = date_val[0]
         year_str = date_str.split('-', 1)[0]
         year = int(year_str)
