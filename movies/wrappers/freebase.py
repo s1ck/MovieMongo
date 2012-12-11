@@ -20,11 +20,11 @@ class FreebaseWrapper(BaseWrapper):
             'name~=': name,  # LIKE "%name"
             'name': None,  # MUST have name
             'type': '/film/film',  # must be of type film
-            '*': [],  # any other stuff
-            #'genre': None,
-            #'initial_release_date': None,
-            #'written_by': None,
-            #'directed_by': None,
+            'genre': [],
+            'id': None,
+            'initial_release_date': [],
+            'written_by': [],
+            'directed_by': [],
             'starring': [{
                 'actor': {'name': None}
             }],
@@ -37,8 +37,14 @@ class FreebaseWrapper(BaseWrapper):
                 .mqlread(query=json.dumps(query)).execute())
         return self._normalize(response)
 
+    def get_name(self):
+        return 'freebase'
+
     def _normalize(self, response):
         """maps a query response to the global result schema"""
+
+        # notes:
+        # * imdb_id already awailable in response['result']
 
         # source key: (normalized key, transformation method to call)
         mappings = {
@@ -64,9 +70,18 @@ class FreebaseWrapper(BaseWrapper):
                         val = method(val)
                     normalized_key = mappings[key][0]
                     normalized_res[normalized_key] = val
-                    normalized_res['source'] = 'freebase'
+                normalized_res['source'] = 'freebase'
+                freebase_id = result['id']
+                normalized_res['id'] = freebase_id
+                img_url = self._get_image_url(freebase_id)
+                normalized_res['img_url'] = img_url
+                normalized_res 
             results.append(normalized_res)
         return {'result': results}
+
+    def _get_image_url(self, freebase_id):
+        res = self.__freebase.image(id=freebase_id)
+        return res.uri
 
     def _get_year(self, date_val):
         """
