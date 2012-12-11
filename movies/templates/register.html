@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block navbar_extra %}
+<ul class="breadcrumb">
+  <li><a href="/"><i class="icon-home"></i>Home</a> <span class="divider">/</span></li>
+  <li class="active">Register</li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<div class="register_login">
+<form method="post" action="/register">
+  <fieldset>
+    <legend>Register</legend>
+    <label>Username: </label>
+    <input type="text" name="username" value="" />
+    <label>Password: </label>
+    <input type="password" name="password" value="" /><br/>
+    <button type="submit" class="btn">Submit</button>
+  </fieldset>
+</form>
+</div>
+{% endblock %}
