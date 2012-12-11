@@ -27,3 +27,8 @@ div#search{
     text-align: center;
     margin-top: 200px;
     }
+
+.register_login{
+    width:60%;
+    margin:70px auto auto auto;
+}

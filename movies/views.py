@@ -50,7 +50,7 @@ def index():
             films = freebase.get_film_by_name("The Matrix")
             return films
         else:
-            return template("index.html")
+            return template("index.html", user=aaa.current_user.username)
 
 @route('/:id', method="GET")
 def get_movie(id):
@@ -63,7 +63,7 @@ def get_movie(id):
         films = freebase.get_film_by_name(id)
         return films
     else:
-        return template("details.html")
+        return template("details.html", user=aaa.current_user.username)
 
 @route('/:id', method="PUT")
 def put_movie(id):
@@ -102,7 +102,7 @@ def login():
     """Authenticate users"""
     username = request.params['username'].strip()
     password = request.params['password'].strip()
-    aaa.login(username, password, success_redirect='/', fail_redirect='/login2')
+    aaa.login(username, password, success_redirect='/', fail_redirect='/login')
 
 @route('/logout')
 def logout():
