@@ -67,11 +67,7 @@ class FreebaseWrapper(BaseWrapper):
                         val = method(val)
                     normalized_key = mappings[key][0]
                     normalized_res[normalized_key] = val
-<<<<<<< HEAD
                     normalized_res['source'] = self.get_name()
-=======
-                    normalized_res['source'] = 'freebase'
->>>>>>> 982c941683826010c880c26e4ec9660887d60cc2
             results.append(normalized_res)
         return {'result': results}
 
