@@ -1,7 +1,10 @@
 import sys
+import re
+import json
 
 from bottle import static_file, request, route, TEMPLATE_PATH, jinja2_template as template
 from movies.utils.freebase import FreebaseWrapper
+from movies.wrappers.mongodb import MongoDBWrapper
 
 TEMPLATE_PATH.append("./movies/templates")
 
@@ -24,9 +27,18 @@ def index():
     user or the results of a search.
     """
     if "search" in request.params:
-        # TODO query generic mediator
+        search = request.params['search']
+
+        # TODO the following has to be done by the mediator
+        # search mongo first
+        mongo = MongoDBWrapper('localhost', 27017)
+        films = mongo.get_films_by_name(search)
+
+        # search the APIs
+        # freebase
         freebase = FreebaseWrapper()
-        films = freebase.get_film_by_name(request.params["search"])
+        films['result'] += freebase.get_film_by_name(search)['result']
+        # TODO query generic mediator
         return films
     else:
         if request.headers['accept'] == "application/json":

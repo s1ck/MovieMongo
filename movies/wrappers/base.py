@@ -6,6 +6,6 @@ class BaseWrapper(object):
     other wrappers
     """
 
-    def get_film_by_name(self, name):
+    def get_films_by_name(self, name):
         raise NotImplementedError
 

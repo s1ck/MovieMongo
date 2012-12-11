@@ -20,4 +20,7 @@ class FreebaseWrapper(object):
                 .mqlread(query=json.dumps(query))
                 .execute())
 
+        for doc in response['result']:
+            doc['source'] = 'freebase'
+
         return response
