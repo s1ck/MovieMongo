@@ -39,12 +39,16 @@
     });
 
     function format_result(result){
+      img_url = result.img_url ? result.img_url : "http://placehold.it/250x150";
+      url = result.source+"?id="+result.id;
+      
       return "<li class='media thumbnail'>"
 	+ "<div class='media-body'>"
-	+ "  <a class='pull-left' href='"+result.name+"'>"
-	+ "    <img class='media-object' src='http://placehold.it/250x150' /> "
+	+ "  <a class='pull-left' href='/"+url+"'>"
+	+ "    <img class='media-object result' src='" + img_url + "' /> "
 	+ "  </a>"
-	+ "  <h3 class='media-heading'>"+result.name+" ["+ result.source +"]</h3>"
+	+ "  <a href='/"+url+"'><h3 class='media-heading'>"+result.name+"</h3></a>"
+        + "  <p>Source: " + result.source + "</p>"
 	+ "</div>"
 	+ "</li>";
     }
@@ -92,25 +96,5 @@
 
 {% block content %}
 <div id="results">
-  <!-- <ul class="media-list"> -->
-  <!--   <li class="media thumbnail"> -->
-  <!--     <a class="pull-left" href="/The%20matrix"> -->
-  <!-- 	<img class="media-object" src="http://placehold.it/250x150" /> -->
-  <!--     </a> -->
-  <!--     <div class="media-body"> -->
-  <!-- 	<h3 class="media-heading">The Matrix<i class="icon-ok"></i></h3> -->
-  <!-- 	<p>The Matrix is a 1999 American science fiction action film written and directed by Larry and Andy Wachowski.</p> -->
-  <!--     </div> -->
-  <!--   </li> -->
-  <!--   <li class="media thumbnail"> -->
-  <!--     <a class="pull-left" href="#"> -->
-  <!-- 	<img class="media-object" src="http://placehold.it/250x150" /> -->
-  <!--     </a> -->
-  <!--     <div class="media-body"> -->
-  <!-- 	<h3 class="media-heading">Example<i class="icon-plus"></i></h3> -->
-  <!-- 	<p>The Matrix is a 1999 American science fiction action film written and directed by Larry and Andy Wachowski.</p> -->
-  <!--     </div> -->
-  <!--   </li> -->
-  <!-- </ul> -->
 </div>
 {% endblock %}

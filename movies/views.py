@@ -54,15 +54,14 @@ def index():
         else:
             return template("index.html", user=aaa.current_user.username)
 
-@route('/:id', method="GET")
-def get_movie(id):
+@route('/:source', method="GET")
+def get_movie(source):
     """
     This method delivers all the details available for a given movie.
     """
-    if request.headers['accept'] == "application/json":
-        # TODO query local db data
-        freebase = FreebaseWrapper()
-        films = freebase.get_film_by_name(id)
+    id = request.params.get('id')
+    if id and request.headers['accept'] == "application/json":
+        films = mediator.get_film_by_id(id, source)
         return films
     else:
         return template("details.html", user=aaa.current_user.username)

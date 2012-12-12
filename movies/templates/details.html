@@ -11,14 +11,34 @@
   <script type="text/javascript">
   $().ready(function(){
     $.ajax({
-      url: "http://localhost:8080/The%20matrix",
+      url: document.URL,//"http://localhost:8080/The%20matrix",
       headers: {Accept:"application/json"},
       success: function(data){
 	console.log(data);
-	$("#details").append("<pre>"+data.result+"</pre>");
+	res = data.result[0];
+	$("#details").append(format_result(res));
       }
     });
   });
+
+function format_result(result){
+  img_url = result.img_url ? result.img_url : "http://placehold.it/250x150";
+  
+  out = "<div class='media-body thumbnail'>"
+    + "  <a class='pull-left' href='/"+result.source+"?id="+result.id+"'>"
+    + "    <img class='media-object result' src='" + img_url + "' /> "
+    + "  </a>"
+    + "  <h3 class='media-heading'>"+result.name+"</h3>"
+    + "  <dl class='dl-horizontal' style='margin-top:50px'>"
+    + "  <dt>Source:</dt><dd>" + result.source + "</dd>";
+  out += result.actors.length > 0 ? "<dt>actors:</dt><dd>" + result.actors + "</dd>" : "";
+  out += result.directed_by.length > 0 ? "<dt>directed_by:</dt><dd>" + result.directed_by + "</dd>" : "";
+  out += result.genre.length > 0 ? "<dt>genre:</dt><dd>" + result.genre + "</dd>" : "";
+  out += result.initial_release_date ? "  <dt>released:</dt><dd>" + result.initial_release_date + "</dd>" : "";
+  out += result.written_by.length > 0 ? "<dt>written by:</dt><dd>" + result.written_by + "</dd>" : "";
+  out += "</dl></div>";
+  return out;
+  }
   </script>
   <div id="details">
     
