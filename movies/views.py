@@ -66,19 +66,21 @@ def get_movie(source):
     else:
         return template("details.html", user=aaa.current_user.username)
 
-@route('/:id', method="PUT")
-def put_movie(id):
+@route('/:source', method="POST")
+def post_movie(source):
     """
     This method stores a new movie in the database.
     """
+    #TODO call mongo manager
     pass
 
-@route('/:id', method="DELETE")
-def delete_movie(id):
+@route('/:source', method="DELETE")
+def delete_movie(source):
     """
     This method deletes a given movie either from the users movie collection or
     completely from the database if no other user owns this movie.
     """
+    #TODO call mongo manager
     pass
 
 @route('/register', method='GET')
