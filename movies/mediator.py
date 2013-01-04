@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import pymongo
 from bson.json_util import dumps
+import json
 
 class Mediator(object):
     def __init__(self, mongo_mgr):
@@ -15,17 +16,13 @@ class Mediator(object):
         films['result'] = []
 
         for wrapper in self._wrappers.values():
-            #if wrapper.get_name() == 'mongodb':
-            #    films['result'] += [dumps(a) for a in
-            #            wrapper.get_films_by_name(name)['result']]
-            #else:
             films['result'] += wrapper.get_films_by_name(name)['result']
 
         # stage 1: store non exisiting films in the database
         self.store_films(films['result'])
 
         # some json serialization
-        films['result'] = [dumps(f) for f in films['result']]
+        films['result'] = [json.loads(dumps(f)) for f in films['result']]
 
         return films
 
@@ -40,7 +37,7 @@ class Mediator(object):
             if '_id' not in film.keys():
                     # film with same name already stored?
                     db_films = self._mongo_mgr.get_films_by_name(film['name'])
-                    if db_films is None:
+                    if db_films is None or db_films.count() == 0:
                         self._mongo_mgr.upsert_film(film)
                     else:
                         # match (p.e. by year) if this is really the same film
