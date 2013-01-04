@@ -14,9 +14,10 @@ class FreebaseWrapper(BaseWrapper):
         self.__google_api_key = settings.GOOGLE_API_KEY
         self.__freebase = discovery.build('freebase', 'v1',
                 developerKey=settings.GOOGLE_API_KEY)
+        self.name = 'freebase'
 
     def get_name(self):
-        return "freebase"
+        return self.name
 
     def get_films_by_name(self, name):
         query = [{
@@ -93,23 +94,21 @@ class FreebaseWrapper(BaseWrapper):
                         val = method(val)
                     normalized_key = mappings[key][0]
                     normalized_res[normalized_key] = val
-                normalized_res['source'] = 'freebase'
-                freebase_id = result['id']
-                normalized_res['id'] = freebase_id
-                img_url = self._get_image_url(freebase_id)
-                normalized_res['img_url'] = img_url
-            results.append(normalized_res)
-
-            ## add additional data
+            ## add additional information
             # source
-            normalized_res['source'] = 'freebase'
+            normalized_res['source'] = self.name
             # id
-            normalized_res['id'] = result['id']
-            # imdb link
+            freebase_id = result['id']
+            normalized_res['id'] = freebase_id
+            # image url
+            img_url = self._get_image_url(freebase_id)
+            normalized_res['img_url'] = img_url
+            # link to imdb
             normalized_res['link'] = {
                 'target': 'imdb',
                 'value': result['imdb_id']
             }
+            results.append(normalized_res)
         return {'result': results}
 
     def _get_image_url(self, freebase_id):

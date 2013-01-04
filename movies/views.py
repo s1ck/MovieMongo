@@ -7,6 +7,7 @@ from bottle import static_file, redirect, request, route, TEMPLATE_PATH, jinja2_
 from movies.mediator import Mediator
 from movies.wrappers.freebase import FreebaseWrapper
 from movies.wrappers.mongodb import MongoDBWrapper
+from movies.wrappers.imdbwrapper import IMDBWrapper
 from utils import MongoManager
 from utils.cork import Cork
 from utils.cork.mongo_backend import MongoDbBackend
@@ -29,6 +30,7 @@ mongo_mgr = MongoManager(settings.MONGO_HOST, settings.MONGO_PORT)
 mediator = Mediator(mongo_mgr)
 mediator.add_wrapper(MongoDBWrapper(mongo_mgr))
 mediator.add_wrapper(FreebaseWrapper())
+mediator.add_wrapper(IMDBWrapper())
 
 
 @route('/media/:path#.+#', name='static')
