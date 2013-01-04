@@ -35,6 +35,7 @@ class FreebaseWrapper(BaseWrapper):
                 'namespace': None,
                 'value': None
             }],
+            'imdb_id': None,
         }]
         response = json.loads(self.__freebase
                 .mqlread(query=json.dumps(query)).execute())
@@ -56,6 +57,7 @@ class FreebaseWrapper(BaseWrapper):
                 'namespace': None,
                 'value': None
             }],
+            'imdb_id': None,
         }]
         response = json.loads(self.__freebase
                 .mqlread(query=json.dumps(query)).execute())
@@ -67,9 +69,6 @@ class FreebaseWrapper(BaseWrapper):
     def _normalize(self, response):
         """maps a query response to the global result schema"""
 
-        # notes:
-        # * imdb_id already awailable in response['result']
-
         # source key: (normalized key, transformation method to call)
         mappings = {
             'name': ('name', None),
@@ -79,7 +78,7 @@ class FreebaseWrapper(BaseWrapper):
             'written_by': ('written_by', None),
             'starring' : ('actors', self._get_actors),
             'genre': ('genre', None),
-            'key': ('links', self._get_links),
+            #'key': ('links', self._get_links),
         }
 
         mapping_keys = mappings.keys()
@@ -99,8 +98,18 @@ class FreebaseWrapper(BaseWrapper):
                 normalized_res['id'] = freebase_id
                 img_url = self._get_image_url(freebase_id)
                 normalized_res['img_url'] = img_url
-                normalized_res 
             results.append(normalized_res)
+
+            ## add additional data
+            # source
+            normalized_res['source'] = 'freebase'
+            # id
+            normalized_res['id'] = result['id']
+            # imdb link
+            normalized_res['link'] = {
+                'target': 'imdb',
+                'value': result['imdb_id']
+            }
         return {'result': results}
 
     def _get_image_url(self, freebase_id):
