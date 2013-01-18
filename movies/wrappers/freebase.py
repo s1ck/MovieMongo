@@ -36,7 +36,6 @@ class FreebaseWrapper(BaseWrapper):
                 'namespace': None,
                 'value': None
             }],
-            'imdb_id': None,
         }]
         response = json.loads(self.__freebase
                 .mqlread(query=json.dumps(query)).execute())
@@ -58,7 +57,6 @@ class FreebaseWrapper(BaseWrapper):
                 'namespace': None,
                 'value': None
             }],
-            'imdb_id': None,
         }]
         response = json.loads(self.__freebase
                 .mqlread(query=json.dumps(query)).execute())
@@ -79,7 +77,7 @@ class FreebaseWrapper(BaseWrapper):
             'written_by': ('written_by', None),
             'starring' : ('actors', self._get_actors),
             'genre': ('genre', None),
-            #'key': ('links', self._get_links),
+            'key': ('links', self._get_links),
         }
 
         mapping_keys = mappings.keys()
@@ -103,11 +101,6 @@ class FreebaseWrapper(BaseWrapper):
             # image url
             img_url = self._get_image_url(freebase_id)
             normalized_res['img_url'] = img_url
-            # link to imdb
-            normalized_res['links'] = {
-                'target': 'imdb',
-                'value': result['imdb_id']
-            }
             results.append(normalized_res)
         return {'result': results}
 
@@ -172,6 +165,13 @@ class FreebaseWrapper(BaseWrapper):
          ...
         ]
         """
-        # TODO: do sth useful here
-        return link_vals
+        links = []
+        for link_val in link_vals:
+            ns = link_val.get('namespace', '')
+            if ns == '/authority/imdb/title':
+                links.append({'target': 'imdb', 'value': link_val['value']})
+
+        # links may look sth. like this:
+        # links = [{'target': 'imdb', 'value': 'fooo123'}]
+        return links
 
