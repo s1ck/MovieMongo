@@ -31,7 +31,7 @@ mongo_mgr = MongoManager(settings.MONGO_HOST, settings.MONGO_PORT)
 mediator = Mediator(mongo_mgr)
 mediator.add_wrapper(MongoDBWrapper(mongo_mgr))
 mediator.add_wrapper(FreebaseWrapper())
-mediator.add_wrapper(IMDBWrapper())
+#mediator.add_wrapper(IMDBWrapper())
 
 
 @route('/media/:path#.+#', name='static')
@@ -58,13 +58,14 @@ def index():
         return films
     else:
         if request.headers['accept'] == "application/json":
-            films = mongo_mgr.get_films_by_user(aaa.current_user.id)
-            for film in films:
-                film['my_movie'] = True
+            films = mediator.get_films_by_name('Matrix')
 
-            print type(films[0])
+            # films = mongo_mgr.get_films_by_user(aaa.current_user.id)
+            # for film in films:
+            #     film['my_movie'] = True
+            #return json.loads(dumps(films))
 
-            return json.loads(dumps(films)) #mediator.get_films_by_name('Matrix')
+            return films
         else:
             return template("index.html", user=aaa.current_user.username)
 

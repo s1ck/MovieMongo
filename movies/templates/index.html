@@ -67,15 +67,16 @@
       $.ajax({
 	url: "http://localhost:8080/",
 	headers: {Accept:"application/json"},
-	success: function(data){
-	  console.log(data);
+	success: function(data,b,c){
+	  console.log(data,b,c);
 	  if (data.result.length == 0)
 	    $("#results").append("<h2>you have no films in your collection</h2>");
 	  else{
 	    $("#results").append("<ul class='media-list'>");
 	    for (result in data.result){
-	      result = data.result[result];
-	      media_res = format_result(result);
+	      //result = data.result[result];
+
+	      media_res = format_result(data.result[result]);
 	      $("#results ul.media-list").append(media_res);
 	    }
 	  }
