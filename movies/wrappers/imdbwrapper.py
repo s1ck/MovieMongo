@@ -67,7 +67,7 @@ class IMDBWrapper(BaseWrapper):
             # source
             normalized_res['source'] = self.name
             # id
-            normalized_res['id'] = result.getID()
+            normalized_res['source_id'] = result.getID()
             # image url
             if result.get('cover url') is not None:
                 normalized_res['img_url'] = result['cover url']
