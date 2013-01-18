@@ -90,6 +90,7 @@ class MongoManager(object):
                     user['films'] = [film['_id']]
                 else:
                     user['films'] += [film['_id']]
+                _user_coll.save(user)
             else:
                 print "=== add_film_to_user: user or film was None"
         except:
