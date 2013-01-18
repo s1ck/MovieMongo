@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-import pymongo
+
 from bson.json_util import dumps
 import json
+
 
 class Mediator(object):
     def __init__(self, mongo_mgr):
@@ -49,22 +50,21 @@ class Mediator(object):
         for film in films:
             # film found in mongodb?
             if '_id' not in film.keys():
-                    # film with same name, source and title already stored?
-                    pattern = {'name': film['name']
-                            ,'initial_release_date':
-                            film['initial_release_date']
-                            ,'source': film['source']
-                            }
-                    db_films = self._mongo_mgr.get_films_by_pattern(pattern)
-                    if db_films is None or db_films.count() == 0:
-                        film['_id'] = self._mongo_mgr.upsert_film(film)
-                    else:
-                        # match (p.e. by year) if this is really the same film
-                        film['_id'] = db_films[0]['_id']
-                        print '=== found movie with same name, skip store'
+                # film with same name, source and title already stored?
+                pattern = {
+                    'name': film['name'],
+                    'initial_release_date': film['initial_release_date'],
+                    'source': film['source']
+                }
+                db_films = self._mongo_mgr.get_films_by_pattern(pattern)
+                if db_films is None or db_films.count() == 0:
+                    film['_id'] = self._mongo_mgr.upsert_film(film)
+                else:
+                    # match (p.e. by year) if this is really the same film
+                    film['_id'] = db_films[0]['_id']
+                    print('=== found movie with same name, skip store')
             else:
-                print '=== movie has _id, skip store'
-
+                print('=== movie has _id, skip store')
 
     def store_links(self, films):
         for film in films:
@@ -102,6 +102,7 @@ class Mediator(object):
                     store = False
 
                 if store:
+                    # FIXME: film in the next line is not defined!!!
                     self._mongo_mgr.upsert_link(film['_id'], link['value'],
                             link['target'])
 
