@@ -67,30 +67,41 @@ class Mediator(object):
 
 
     def store_links(self, films):
-        print "=== store_links:", len(films)
         for film in films:
             self.store_link(film)
 
-    def store_link(self, film):
+    def store_link(self, from_film):
         '''
         Stores links between films. The links between films are undirected, so
         before a link is stored, it has to be checked if there is a link in the
         opposite direction already stored in the db.
         '''
-        if 'links' in film:
-            for link in film['links']:
-                p1 = {'source_film_id': film['source_id'],
-                        'target_film_id': link['value'],
-                        'target_platform': link['target']
-                        }
-                p2 = {'source_film_id': link['value'],
-                        'target_film_id': film['source_id'],
-                        'target_platform': film['source']
-                        }
-                p1_exists = not self._mongo_mgr.get_link_by_pattern(p1) is None
-                p2_exists = not self._mongo_mgr.get_link_by_pattern(p2) is None
-                print p1_exists and p2_exists
-                if p1_exists and p2_exists:
+        from_id = from_film['_id']
+
+        if 'links' in from_film:
+            for link in from_film['links']:
+                # try to get linked movie
+                to_films = self._mongo_mgr.get_films_by_pattern({'source_id':
+                    link['value']})
+
+                if to_films and to_films.count() > 0:
+                    to_film = to_films[0]
+                    p1 = {'source_film_id': from_id,
+                            'target_film_id': to_film['_id']
+                            }
+                    p2 = {'source_film_id': to_film['_id'],
+                            'target_film_id': from_id,
+                            }
+
+                    # check if at least one of the pattern exists
+                    store = self._mongo_mgr.get_links_by_pattern(p1) is None
+                    if store:
+                        store = self._mongo_mgr.get_links_by_pattern(p2) is None
+                else:
+                    print "=== store_links: to_film not in db"
+                    store = False
+
+                if store:
                     self._mongo_mgr.upsert_link(film['_id'], link['value'],
                             link['target'])
 
