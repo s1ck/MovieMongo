@@ -25,6 +25,9 @@ class Mediator(object):
         # stage 3: store non exisiting films in the database
         self.store_films(films['result'])
 
+        # stage 4: get distinct movies
+        films['result'] = self.get_distinct_movies(films['result'])
+
         # some json serialization
         films['result'] = [json.loads(dumps(f)) for f in films['result']]
         return films
@@ -56,3 +59,14 @@ class Mediator(object):
                         print '=== found movie with same name, skip store'
             else:
                 print '=== movie has _id, skip store'
+
+    def get_distinct_movies(self, films):
+        # not possible, have to preserve the order
+        #return {v['_id']:v for v in films}.values()}
+        ret = []
+        ids = set()
+        for film in films:
+            if film['_id'] not in ids:
+                ret.append(film)
+                ids.add(film['_id'])
+        return ret
