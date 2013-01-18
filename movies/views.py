@@ -51,7 +51,11 @@ def index():
 
     if "search" in request.params:
         search = request.params['search']
-        return mediator.get_films_by_name(search)
+        films = mediator.get_films_by_name(search)
+        for film in films['result']:
+            film['my_movie'] = mongo_mgr.user_has_movie(film['_id']['$oid'], aaa.current_user.id)
+
+        return films
     else:
         if request.headers['accept'] == "application/json":
             # TODO get user movies

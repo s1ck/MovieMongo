@@ -41,7 +41,8 @@
     function format_result(result, my_movie){
       img_url = result.img_url ? result.img_url : "http://placehold.it/250x150";
       url = result._id.$oid;//source+"?id="+result.id;
-      if (my_movie === true)
+      
+      if (result.my_movie === true)
 	status = "<a href='#' id='del_movie' title='Remove movie from collection' onclick=\"del_movie(\'"+result._id.$oid+"\',event)\">"
 	       +   "<i class='icon-check del'></i>"
                + "</a>";
@@ -74,7 +75,7 @@
 	    $("#results").append("<ul class='media-list'>");
 	    for (result in data.result){
 	      result = data.result[result];
-	      media_res = format_result(result, true);
+	      media_res = format_result(result);
 	      $("#results ul.media-list").append(media_res);
 	    }
 	  }
@@ -107,7 +108,7 @@
     $.ajax({
       url: "http://localhost:8080/",
       type: "DELETE",
-      data: {source: id},
+      data: {id: id},
       success: function(data){
 	$("#add_movie i").removeClass("del").addClass("add");
 	console.log("success");

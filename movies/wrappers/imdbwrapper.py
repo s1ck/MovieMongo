@@ -35,8 +35,7 @@ class IMDBWrapper(BaseWrapper):
         return self._normalize(movies)
 
     def get_film_by_id(self, film_id):
-        film = self.__db.get_movie(film_id)
-
+        film = self.__db.get_movie(film_id[2:])
         return self._normalize([film])
 
     def _normalize(self, results):
@@ -67,7 +66,7 @@ class IMDBWrapper(BaseWrapper):
             # source
             normalized_res['source'] = self.name
             # id
-            normalized_res['source_id'] = result.getID()
+            normalized_res['source_id'] = 'tt' + result.getID()
             # image url
             if result.get('cover url') is not None:
                 normalized_res['img_url'] = result['cover url']
