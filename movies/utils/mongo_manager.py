@@ -37,7 +37,7 @@ class MongoManager(object):
 
     def get_film_by_id(self, film_id):
         try:
-            return self._movie_coll.find_one({'_id': get_object_id(film_id)})
+            return self._movie_coll.find_one({'_id': self.get_object_id(film_id)})
         except:
             print sys.exc_info()[1]
             return None
@@ -95,8 +95,9 @@ class MongoManager(object):
     def remove_film_from_user(self, film_id, user_id):
         try:
             user = self.get_user_by_id(user_id)
+            film_id = self.get_object_id(film_id)
 
-            if user and film:
+            if user and film_id:
                 if 'films' in user.keys() and film_id in user['films']:
                     user['films'].remove(film_id)
                     self._user_coll.save(user)
@@ -105,7 +106,7 @@ class MongoManager(object):
         except:
             print sys.exc_info()[1]
 
-    def user_has_movie(self, user_id, film_id):
+    def user_has_movie(self, film_id, user_id):
         try:
             user = self.get_user_by_id(user_id)
             if user and 'films' in user:
@@ -163,7 +164,7 @@ class MongoManager(object):
 
     # helpers
 
-    def get_object_id(identifier):
-        return identifier if isinstance(identifier, Objectid) \
+    def get_object_id(self, identifier):
+        return identifier if isinstance(identifier, ObjectId) \
             else ObjectId(str(identifier))
 

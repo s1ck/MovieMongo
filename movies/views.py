@@ -4,6 +4,7 @@ import re
 import json
 
 from bottle import static_file, redirect, request, route, TEMPLATE_PATH, jinja2_template as template
+from bson.json_util import dumps
 from movies.mediator import Mediator
 from movies.wrappers.freebase import FreebaseWrapper
 from movies.wrappers.mongodb import MongoDBWrapper
@@ -58,15 +59,18 @@ def index():
         else:
             return template("index.html", user=aaa.current_user.username)
 
-@route('/:source', method="GET")
-def get_movie(source):
+@route('/:id', method="GET")
+def get_movie(id):
     """
     This method delivers all the details available for a given movie.
     """
-    id = request.params.get('id')
     if id and request.headers['accept'] == "application/json":
-        films = mediator.get_film_by_id(id, source)
-        return films
+        film = json.loads(dumps(mongo_mgr.get_film_by_id(id)))
+        print ">>>>>>>>",film
+        user_has_movie = mongo_mgr.user_has_movie(id, aaa.current_user.id)
+        film['my_movie'] = user_has_movie
+        print ">>>>>>>>",film
+        return film
     else:
         return template("details.html", user=aaa.current_user.username)
 
@@ -76,9 +80,6 @@ def post_movie():
     This method stores a new movie in the database.
     """
     id = request.params.get('id')
-    print id
-    #film = mediator.get_film_by_id(id, source)
-    #print film
     mongo_mgr.add_film_to_user(id, aaa.current_user.id)
 
 @route('/', method="DELETE")
@@ -87,8 +88,9 @@ def delete_movie():
     This method deletes a given movie either from the users movie collection or
     completely from the database if no other user owns this movie.
     """
-    #TODO call mongo manager
-    print request.params.get('source')
+    id = request.params.get('id')
+    print "---------------", id
+    mongo_mgr.remove_film_from_user(id, aaa.current_user.id)
 
 @route('/register', method='GET')
 def register():
