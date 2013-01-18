@@ -23,7 +23,6 @@ class Mediator(object):
 
         # some json serialization
         films['result'] = [json.loads(dumps(f)) for f in films['result']]
-
         return films
 
     def get_film_by_id(self, film_id, source):
