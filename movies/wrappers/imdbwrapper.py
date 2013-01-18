@@ -34,9 +34,9 @@ class IMDBWrapper(BaseWrapper):
             movies.append(movie)
         return self._normalize(movies)
 
-    def get_films_by_id(self, film_id):
+    def get_film_by_id(self, film_id):
         film = self.__db.get_movie(film_id)
-        
+
         return self._normalize([film])
 
     def _normalize(self, results):
@@ -85,5 +85,4 @@ class IMDBWrapper(BaseWrapper):
         names = []
         for person in persons:
             names.append(person['name'])
-
         return names

@@ -104,7 +104,7 @@ class FreebaseWrapper(BaseWrapper):
             img_url = self._get_image_url(freebase_id)
             normalized_res['img_url'] = img_url
             # link to imdb
-            normalized_res['link'] = {
+            normalized_res['links'] = {
                 'target': 'imdb',
                 'value': result['imdb_id']
             }
