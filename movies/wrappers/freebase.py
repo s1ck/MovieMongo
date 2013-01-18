@@ -93,8 +93,8 @@ class FreebaseWrapper(BaseWrapper):
             # source
             normalized_res['source'] = self.name
             # id
-            freebase_id = result['source_id']
-            normalized_res['id'] = freebase_id
+            freebase_id = result['id']
+            normalized_res['source_id'] = freebase_id
             # image url
             img_url = self._get_image_url(freebase_id)
             normalized_res['img_url'] = img_url
