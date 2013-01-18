@@ -42,8 +42,7 @@ class Mediator(object):
         for film in films:
             # film found in mongodb?
             if '_id' not in film.keys():
-                    # film with same name already stored?
-                    #TODO only (name, source, year) can be unique
+                    # film with same name, source and title already stored?
                     pattern = {'name': film['name']
                             ,'initial_release_date':
                             film['initial_release_date']
@@ -53,7 +52,6 @@ class Mediator(object):
                     if db_films is None or db_films.count() == 0:
                         film['_id'] = self._mongo_mgr.upsert_film(film)
                     else:
-                        #TODO assign the id of the found film to the doc
                         # match (p.e. by year) if this is really the same film
                         film['_id'] = db_films[0]['_id']
                         print '=== found movie with same name, skip store'
