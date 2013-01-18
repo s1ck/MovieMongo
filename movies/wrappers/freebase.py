@@ -62,9 +62,6 @@ class FreebaseWrapper(BaseWrapper):
                 .mqlread(query=json.dumps(query)).execute())
         return self._normalize(response)
 
-    def get_name(self):
-        return 'freebase'
-
     def _normalize(self, response):
         """maps a query response to the global result schema"""
 
@@ -96,7 +93,7 @@ class FreebaseWrapper(BaseWrapper):
             # source
             normalized_res['source'] = self.name
             # id
-            freebase_id = result['id']
+            freebase_id = result['source_id']
             normalized_res['id'] = freebase_id
             # image url
             img_url = self._get_image_url(freebase_id)
@@ -174,4 +171,3 @@ class FreebaseWrapper(BaseWrapper):
         # links may look sth. like this:
         # links = [{'target': 'imdb', 'value': 'fooo123'}]
         return links
-
