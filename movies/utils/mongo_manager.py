@@ -35,6 +35,7 @@ class MongoManager(object):
             return None
 
     def get_film_by_id(self, film_id):
+        print self._movie_coll
         try:
             return self._movie_coll.find_one({'_id': film_id})
         except:
@@ -69,6 +70,7 @@ class MongoManager(object):
     # user methods
 
     def get_user_by_id(self, user_id):
+        print self._user_coll
         try:
             return self._user_coll.find_one({'_id': user_id})
         except:
@@ -76,8 +78,10 @@ class MongoManager(object):
             return None
 
     def add_film_to_user(self, film_id, user_id):
+        print "++++++++++",film_id, type(user_id)
         user = self.get_user_by_id(user_id)
         film = self.get_film_by_id(film_id)
+        print "++++++++++",user, film
 
         if user and film:
             if 'films' not in user.keys():

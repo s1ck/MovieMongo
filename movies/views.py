@@ -20,7 +20,7 @@ backend = MongoDbBackend(
    port = settings.MONGO_PORT,
    database = settings.MONGO_DB,
    initialize=False,
-   users_store="users",
+   users_store="user",
    roles_store="roles",
    pending_regs_store="register",
 )
@@ -30,7 +30,7 @@ mongo_mgr = MongoManager(settings.MONGO_HOST, settings.MONGO_PORT)
 mediator = Mediator(mongo_mgr)
 mediator.add_wrapper(MongoDBWrapper(mongo_mgr))
 mediator.add_wrapper(FreebaseWrapper())
-mediator.add_wrapper(IMDBWrapper())
+#mediator.add_wrapper(IMDBWrapper())
 
 
 @route('/media/:path#.+#', name='static')
@@ -70,22 +70,25 @@ def get_movie(source):
     else:
         return template("details.html", user=aaa.current_user.username)
 
-@route('/:source', method="POST")
-def post_movie(source):
+@route('/', method="POST")
+def post_movie():
     """
     This method stores a new movie in the database.
     """
-    #TODO call mongo manager
-    pass
+    id = request.params.get('id')
+    print id
+    #film = mediator.get_film_by_id(id, source)
+    #print film
+    mongo_mgr.add_film_to_user(id, aaa.current_user.id)
 
-@route('/:source', method="DELETE")
-def delete_movie(source):
+@route('/', method="DELETE")
+def delete_movie():
     """
     This method deletes a given movie either from the users movie collection or
     completely from the database if no other user owns this movie.
     """
     #TODO call mongo manager
-    pass
+    print request.params.get('source')
 
 @route('/register', method='GET')
 def register():
