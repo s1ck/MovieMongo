@@ -15,8 +15,8 @@
       headers: {Accept:"application/json"},
       success: function(data){
 	console.log(data);
-	res = data.result[0];
-	$("#details").append(format_result(res));
+	//res = data.result[0];
+	$("#details").append(format_result(data));
       }
     });
   });
@@ -36,14 +36,14 @@
 
 function format_result(result){
   img_url = result.img_url ? result.img_url : "http://placehold.it/250x150";
-  //status = my_movie === true ? "V" : "<a href='#' id='add_movie' onclick=\"add_movie(\'"+result.source+"\',\'"+result.id+"\')\">Add</a>";
+  status = result.my_movie === true ? "V" : "<a href='#' id='add_movie' onclick=\"add_movie(\'"+result.source+"\',\'"+result.id+"\')\">Add</a>";
   
   out = "<div class='media-body thumbnail'>"
     + "  <a class='pull-left' href='/"+result.source+"?id="+result.id+"'>"
     + "    <img class='media-object result' src='" + img_url + "' /> "
     + "  </a>"
     + "  <h3 class='media-heading'>"+result.name+"</h3>"
-    //+ status
+    + status
     + "  <dl class='dl-horizontal' style='margin-top:50px'>"
     + "  <dt>Source:</dt><dd>" + result.source + "</dd>";
   out += result.actors.length > 0 ? "<dt>actors:</dt><dd>" + result.actors + "</dd>" : "";
