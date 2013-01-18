@@ -140,35 +140,32 @@ class MongoManager(object):
             print sys.exc_info()[1]
             return None
 
-    def get_link_by_pattern(self, pattern):
+    def get_links_by_pattern(self, pattern):
        try:
            return self._link_coll.find(pattern)
        except:
            print sys.exc_info()[1]
            return None
 
-    def upsert_link(self, film_id, target_film_id, target_platform):
+    def upsert_link(self, from_id, to_id):
         try:
-            source_film = self.get_film_by_pattern({'source_id': film_id})
-            target_film = self.get_film_by_pattern({'source_id': target_film_id})
+            source_film = self.get_film_by_id(from_id)
+            target_film = self.get_film_by_id(to_id)
             error = False
 
-            if target_platform is None:
-                print "=== upsert_link: target platform not given"
-                error = True
             if source_film is None:
-                print "=== upsert_link: source film does not exist", film_id
+                print "=== upsert_link: source film does not exist", from_id
                 error = True
             if target_film is None:
-                print "=== upsert_link: target film does not exist", target_film_id
+                print "=== upsert_link: target film does not exist", to_id
                 error = True
 
             if not error:
                 print "=== upsert_link: storing link between %s and %s" % \
-                    (film_id, target_film_id)
+                    (source_film['_id'], target_film['_id'])
                 return self._link_coll.save({
-                    'source_film_id': source_film['_id'],
-                    'target_film_id': target_film['_id'],
+                    'source_film_id': from_id,
+                    'target_film_id': to_id,
                     })
             else:
                 return None
