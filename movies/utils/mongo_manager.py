@@ -97,8 +97,9 @@ class MongoManager(object):
     def remove_film_from_user(self, film_id, user_id):
         try:
             user = self.get_user_by_id(user_id)
+            film_id = self.get_object_id(film_id)
 
-            if user and film:
+            if user and film_id:
                 if 'films' in user.keys() and film_id in user['films']:
                     user['films'].remove(film_id)
                     self._user_coll.save(user)

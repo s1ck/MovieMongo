@@ -89,6 +89,7 @@ def delete_movie():
     completely from the database if no other user owns this movie.
     """
     id = request.params.get('id')
+    print "---------------", id
     mongo_mgr.remove_film_from_user(id, aaa.current_user.id)
 
 @route('/register', method='GET')
