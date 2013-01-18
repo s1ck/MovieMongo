@@ -58,8 +58,13 @@ def index():
         return films
     else:
         if request.headers['accept'] == "application/json":
-            # TODO get user movies
-            return mediator.get_films_by_name('Matrix')
+            films = mongo_mgr.get_films_by_user(aaa.current_user.id)
+            for film in films:
+                film['my_movie'] = True
+
+            print type(films[0])
+
+            return json.loads(dumps(films)) #mediator.get_films_by_name('Matrix')
         else:
             return template("index.html", user=aaa.current_user.username)
 
@@ -70,10 +75,8 @@ def get_movie(id):
     """
     if id and request.headers['accept'] == "application/json":
         film = json.loads(dumps(mongo_mgr.get_film_by_id(id)))
-        print ">>>>>>>>",film
         user_has_movie = mongo_mgr.user_has_movie(id, aaa.current_user.id)
         film['my_movie'] = user_has_movie
-        print ">>>>>>>>",film
         return film
     else:
         return template("details.html", user=aaa.current_user.username)
@@ -93,7 +96,6 @@ def delete_movie():
     completely from the database if no other user owns this movie.
     """
     id = request.params.get('id')
-    print "---------------", id
     mongo_mgr.remove_film_from_user(id, aaa.current_user.id)
 
 @route('/register', method='GET')

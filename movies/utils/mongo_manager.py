@@ -66,10 +66,24 @@ class MongoManager(object):
             print sys.exc_info()[1]
             return None
 
+    def get_films_by_user(self, user_id):
+        try:
+            user = self._user_coll.find_one({'_id': user_id})
+            films = []
+
+            if 'films' in user.keys():
+                film_ids = user['films']
+                for film_id in film_ids:
+                    film = self.get_film_by_id(film_id)
+                    films.append(film)
+            return films
+        except:
+            print sys.exc_info()[1]
+            return None
+
     # user methods
 
     def get_user_by_id(self, user_id):
-        print self._user_coll
         try:
             return self._user_coll.find_one({'_id': user_id})
         except:
