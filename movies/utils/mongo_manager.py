@@ -36,7 +36,6 @@ class MongoManager(object):
             return None
 
     def get_film_by_id(self, film_id):
-        print self._movie_coll
         try:
             return self._movie_coll.find_one({'_id': get_object_id(film_id)})
         except:
@@ -53,7 +52,6 @@ class MongoManager(object):
 
     def get_films_by_pattern(self, pattern):
        try:
-           print "=== get_films_by_pattern(", pattern, ")"
            return self._movie_coll.find(pattern)
        except:
            print sys.exc_info()[1]
@@ -113,11 +111,55 @@ class MongoManager(object):
             if user and 'films' in user:
                 return (self.get_object_id(film_id) in user['films'])
             else:
-                print "=== user_has_movie: user does not exist"
+                print "=== user_has_movie: user does not exist", user_id
         except:
             print sys.exc_info()[1]
             return False
 
+    # link methods
+
+    def get_link_by_id(self, link_id):
+        try:
+            return self._link_coll.find_one({'_id': get_object_id(link_id)})
+        except:
+            print sys.exc_info()[1]
+            return None
+
+    def get_link_by_pattern(self, pattern):
+       try:
+           return self._link_coll.find(pattern)
+       except:
+           print sys.exc_info()[1]
+           return None
+
+    def upsert_link(self, film_id, target_film_id, target_platform):
+        try:
+            source_film = self.get_film_by_pattern({'source_id': film_id})
+            target_film = self.get_film_by_pattern({'source_id': target_film_id})
+            error = False
+
+            if target_platform is None:
+                print "=== upsert_link: target platform not given"
+                error = True
+            if source_film is None:
+                print "=== upsert_link: source film does not exist", film_id
+                error = True
+            if target_film is None:
+                print "=== upsert_link: target film does not exist", target_film_id
+                error = True
+
+            if not error:
+                print "=== upsert_link: storing link between %s and %s" % \
+                    (film_id, target_film_id)
+                return self._link_coll.save({
+                    'source_film_id': source_film['_id'],
+                    'target_film_id': target_film['_id'],
+                    })
+            else:
+                return None
+        except:
+            print sys.exc_info()[1]
+            return None
 
     # helpers
 
