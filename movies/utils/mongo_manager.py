@@ -49,6 +49,15 @@ class MongoManager(object):
             print sys.exc_info()[1]
             return None
 
+    def get_films_by_pattern(self, pattern):
+       try:
+           print "=== get_films_by_pattern(", pattern, ")"
+           return self._movie_coll.find(pattern)
+       except:
+           print sys.exc_info()[1]
+           return None
+
+
     def get_films_by_regex(self, attr_key, attr_value):
         try:
             regex = re.compile(attr_value, re.IGNORECASE)
@@ -59,5 +68,27 @@ class MongoManager(object):
 
     # user methods
 
+    def get_user_by_id(self, user_id):
+        try:
+            return self._user_coll.find_one({'_id': user_id})
+        except:
+            print sys.exc_info()[1]
+            return None
+
     def add_film_to_user(self, film_id, user_id):
+        user = self.get_user_by_id(user_id)
+        film = self.get_film_by_id(film_id)
+
+        if user and film:
+            if 'films' not in user.keys():
+                user['films'] = [film['_id']]
+            else:
+                user['films'] += [film['_id']]
+        else:
+            print "=== add_film_to_user: user or film was None"
+
+
+        pass
+
+    def remove_film_from_user(self, film_id, user_id):
         pass
