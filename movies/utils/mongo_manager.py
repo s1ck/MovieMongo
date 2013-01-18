@@ -4,6 +4,7 @@ import sys
 import time
 
 import pymongo
+from bson.objectid import ObjectId
 
 
 class MongoManager(object):
@@ -37,7 +38,11 @@ class MongoManager(object):
     def get_film_by_id(self, film_id):
         print self._movie_coll
         try:
-            return self._movie_coll.find_one({'_id': film_id})
+            if isinstance(film_id, ObjectId):
+                return self._movie_coll.find_one({'_id': film_id})
+            else:
+                return self._movie_coll.find_one({'_id':
+                    ObjectId(str(film_id))})
         except:
             print sys.exc_info()[1]
             return None
@@ -91,8 +96,12 @@ class MongoManager(object):
         else:
             print "=== add_film_to_user: user or film was None"
 
-
-        pass
-
     def remove_film_from_user(self, film_id, user_id):
-        pass
+        user = self.get_user_by_id(user_id)
+        film = self.get_film_by_id(film_id)
+
+        if user and film:
+            pass
+        else:
+            print "=== remove_film_from_user: user of film was None"
+
