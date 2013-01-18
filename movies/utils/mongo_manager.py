@@ -14,6 +14,8 @@ class MongoManager(object):
         self._user_coll = self._c.wcm12.user
         self._ucontent_coll = self._c.wcm12.usercontent
 
+    # film methods
+
     def upsert_film(self, film):
         """
         if the film already has an '_id' the corresponding document will be
@@ -54,3 +56,8 @@ class MongoManager(object):
         except:
             print sys.exc_info()[1]
             return None
+
+    # user methods
+
+    def add_film_to_user(self, film_id, user_id):
+        pass
