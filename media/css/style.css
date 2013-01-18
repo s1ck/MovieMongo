@@ -10,12 +10,24 @@ div#search{
     color: green;
 }
 
-#results .icon-plus{
+#results .add {
     color: red;
+    font-size: 1.4em;
     }
 
-#results .icon-plus:hover{
+#results .add:hover{
     color: green;
+    text-decoration: none;
+    }
+
+#results .del {
+    color: green;
+    font-size: 1.4em;
+    }
+
+#results .del:hover{
+    color: red;
+    text-decoration: none;
     }
 
 .navbar i{
@@ -36,4 +48,8 @@ div#search{
 .result{
     max-width: 250px;
     max-height: 150px;
+    }
+
+.media-heading{
+    display: inline;
     }

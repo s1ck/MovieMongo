@@ -36,6 +36,7 @@ class MongoManager(object):
             return None
 
     def get_film_by_id(self, film_id):
+        print self._movie_coll
         try:
             if isinstance(film_id, ObjectId):
                 return self._movie_coll.find_one({'_id': film_id})
@@ -74,6 +75,7 @@ class MongoManager(object):
     # user methods
 
     def get_user_by_id(self, user_id):
+        print self._user_coll
         try:
             return self._user_coll.find_one({'_id': user_id})
         except:
@@ -81,23 +83,30 @@ class MongoManager(object):
             return None
 
     def add_film_to_user(self, film_id, user_id):
-        user = self.get_user_by_id(user_id)
-        film = self.get_film_by_id(film_id)
+        try:
+            user = self.get_user_by_id(user_id)
+            film = self.get_film_by_id(film_id)
 
-        if user and film:
-            if 'films' not in user.keys():
-                user['films'] = [film['_id']]
+            if user and film:
+                if 'films' not in user.keys():
+                    user['films'] = [film['_id']]
+                else:
+                    user['films'] += [film['_id']]
+                self._user_coll.save(user)
             else:
-                user['films'] += [film['_id']]
-        else:
-            print "=== add_film_to_user: user or film was None"
+                print "=== add_film_to_user: user or film was None"
+        except:
+            print sys.exc_info()[1]
 
     def remove_film_from_user(self, film_id, user_id):
-        user = self.get_user_by_id(user_id)
-        film = self.get_film_by_id(film_id)
+        try:
+            user = self.get_user_by_id(user_id)
 
-        if user and film:
-            pass
-        else:
-            print "=== remove_film_from_user: user of film was None"
-
+            if user and film:
+                if 'films' in user.keys() and film_id in user['films']:
+                    user['films'].remove(film_id)
+                    self._user_coll.save(user)
+            else:
+                print "=== remove_film_from_user: user of film was None"
+        except:
+            print sys.exc_info()[1]

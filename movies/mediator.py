@@ -54,6 +54,7 @@ class Mediator(object):
                     if db_films is None or db_films.count() == 0:
                         film['_id'] = self._mongo_mgr.upsert_film(film)
                     else:
+                        print ">>>>>>>>>>" , film['name'], ">>>>", film['initial_release_date']
                         # match (p.e. by year) if this is really the same film
                         film['_id'] = db_films[0]['_id']
                         print '=== found movie with same name, skip store'

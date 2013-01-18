@@ -37,17 +37,26 @@
       $("#searchterm").val("");
       get_my_movies();
     });
-
-    function format_result(result){
+    
+    function format_result(result, my_movie){
       img_url = result.img_url ? result.img_url : "http://placehold.it/250x150";
       url = result.source+"?id="+result.id;
+      if (my_movie === true)
+	status = "<a href='#' id='del_movie' title='Remove movie from collection' onclick=\"del_movie(\'"+result._id.$oid+"\',event)\">"
+	       +   "<i class='icon-check del'></i>"
+               + "</a>";
+      else
+	status = "<a href='#' id='add_movie' title='Add movie to collection' onclick=\"add_movie(\'"+result._id.$oid+"\',event)\">"
+               +   "<i class='icon-check add'></i>"
+               + "</a>";
       
       return "<li class='media thumbnail'>"
 	+ "<div class='media-body'>"
 	+ "  <a class='pull-left' href='/"+url+"'>"
 	+ "    <img class='media-object result' src='" + img_url + "' /> "
 	+ "  </a>"
-	+ "  <a href='/"+url+"'><h3 class='media-heading'>"+result.name+"</h3></a>"
+	+ "  <a href='/"+url+"'><h3 class='media-heading'>"+result.name+"</h3></a>&nbsp;"
+	+ status
         + "  <p>Source: " + result.source + "</p>"
 	+ "</div>"
 	+ "</li>";
@@ -65,7 +74,7 @@
 	    $("#results").append("<ul class='media-list'>");
 	    for (result in data.result){
 	      result = data.result[result];
-	      media_res = format_result(result);
+	      media_res = format_result(result, true);
 	      $("#results ul.media-list").append(media_res);
 	    }
 	  }
@@ -75,6 +84,36 @@
     
     get_my_movies();
   });
+
+  function add_movie(id, event){
+    console.log(event);
+    event.preventDefault();
+    console.log(id);
+    $.ajax({
+      url: "http://localhost:8080/",
+      type: "POST",
+      data: {id: id},
+      success: function(data){
+	$("#add_movie i").removeClass("add").addClass("del");
+	console.log("success");
+      }
+    });
+  }
+
+  function del_movie(id, event){
+    console.log(event);
+    event.preventDefault();
+    console.log(id);
+    $.ajax({
+      url: "http://localhost:8080/",
+      type: "DELETE",
+      data: {source: id},
+      success: function(data){
+	$("#add_movie i").removeClass("del").addClass("add");
+	console.log("success");
+      }
+    });
+  }
 
   </script>
 {% endblock %}

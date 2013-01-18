@@ -677,6 +677,7 @@ class User(object):
         self._cork = cork_obj
         assert username in self._cork._store.users, "Unknown user"
         self.username = username
+        self.id = self._cork._store.users[username]['_id']
         self.role = self._cork._store.users[username]['role']
         self.level = self._cork._store.roles[self.role]
         if isinstance(self.level, dict):
