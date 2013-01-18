@@ -40,7 +40,7 @@
     
     function format_result(result, my_movie){
       img_url = result.img_url ? result.img_url : "http://placehold.it/250x150";
-      url = result.source+"?id="+result.id;
+      url = result._id.$oid;//source+"?id="+result.id;
       if (my_movie === true)
 	status = "<a href='#' id='del_movie' title='Remove movie from collection' onclick=\"del_movie(\'"+result._id.$oid+"\',event)\">"
 	       +   "<i class='icon-check del'></i>"
