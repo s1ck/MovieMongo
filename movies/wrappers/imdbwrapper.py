@@ -47,7 +47,7 @@ class IMDBWrapper(BaseWrapper):
             'year': ('initial_release_date', None),
             'director': ('directed_by', self._resolve_person_names),
             'writer': ('written_by', self._resolve_person_names),
-            'actors': ('actors', self._resolve_person_names),
+            'cast': ('actors', self._resolve_person_names),
             'genres': ('genre', None),
         }
         mapping_keys = mappings.keys()
