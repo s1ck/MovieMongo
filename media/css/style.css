@@ -53,3 +53,13 @@ div#search{
 .media-heading{
     display: inline;
     }
+
+.icon-plus-sign{
+    font-size: 1.4em;
+    color: green;
+    }
+
+.icon-minus-sign{
+    font-size: 1.4em;
+    color: red;
+    }    
