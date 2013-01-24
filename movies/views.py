@@ -60,6 +60,7 @@ def index():
     else:
         if request.headers['accept'] == "application/json":
             films = mongo_mgr.get_films_by_user(aaa.current_user.id)
+            films = [film for film in films if film is not None]
             for film in films:
                 film['my_movie'] = True
             return dumps(films)
