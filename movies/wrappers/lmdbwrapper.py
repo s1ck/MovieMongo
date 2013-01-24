@@ -106,6 +106,7 @@ class LMDBWrapper(BaseWrapper):
             'actors': actors,
             'source': self.name,
             'source_id': uri,
+            'genre': []
         }
 
         links = self._query_sameAs(uri)
