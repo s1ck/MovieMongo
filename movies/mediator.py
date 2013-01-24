@@ -98,9 +98,12 @@ class Mediator(object):
                             }
 
                     # check if at least one of the pattern exists
-                    store = self._mongo_mgr.get_links_by_pattern(p1) is not None
+                    p1_cursor = self._mongo_mgr.get_links_by_pattern (p1)
+                    store = p1_cursor is None or p1_cursor.count () == 0
+
                     if store:
-                        store = self._mongo_mgr.get_links_by_pattern(p2) is not None
+                        p2_cursor = self._mongo_mgr.get_links_by_pattern (p2)
+                        store = p2_cursor is None or p2_cursor.count () == 0
                 else:
                     print "=== store_links: to_film not in db"
                     store = False
