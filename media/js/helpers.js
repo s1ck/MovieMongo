@@ -1,5 +1,5 @@
 function format_result(result){
-  img_url = result.img_url ? result.img_url : "http://placehold.it/250x150";
+  img_url = result.img_url ? result.img_url : "http://img.freebase.com/api/trans/image_thumb/freebase/no_image_png";
   url = result._id.$oid;//source+"?id="+result.id;
   
   if (result.my_movie === true)
@@ -14,7 +14,6 @@ function format_result(result){
   return "<li class='media thumbnail'>"
     + "<div class='media-body'>"
     + "  <a class='pull-left' href='/"+url+"'>"
-    + "    <img class='media-object' data-src='holder.js/250x150' />"
     + "    <img class='media-object result' src='" + img_url + "' /> "
     + "  </a>"
     + "  <a href='/"+url+"'><h3 id='name' class='media-heading'>"+result.name+"</h3></a>&nbsp;"
@@ -25,7 +24,7 @@ function format_result(result){
 }
 
 function format_details(result){
-  img_url = result.img_url ? result.img_url : "http://placehold.it/250x150";
+  img_url = result.img_url ? result.img_url : "http://img.freebase.com/api/trans/image_thumb/freebase/no_image_png";
   if (result.my_movie)
     status = "<a href='#' id='del_movie' title='Remove movie from collection' onclick=\"return del_movie(event,\'"+result._id.$oid+"\');\">"
     +   "<i class='icon-check del'></i>"
@@ -39,9 +38,15 @@ function format_details(result){
     + "  <img class='media-object result pull-left' style='margin-right:10px' src='" + img_url + "' /> "
     + "  <h3 id='name' class='media-heading'>"+result.name+"</h3> "
     + status
-    + "<p><strong>Source:</strong> " + result.source + "</p>"
-
-    + "  <hr/><div class='pull-left'><h4>Details:</h4><dl class='dl-horizontal'>";
+    + "<p><strong>Source:</strong> " + result.source;
+  
+  if (result.links && result.links.length > 0){
+    out += "<br/><strong>other sources: </strong>";
+    for (link in result.links)
+      out += "<abbr title='id: " + result.links[link].value + "'>" + result.links[link].target + "</abbr> ";
+  }
+  out += "</p>";
+  out += "  <hr/><div class='pull-left'><h4>Details:</h4><dl class='dl-horizontal'>";
   out += result.actors.length > 0 ? "<dt>actors:</dt><dd><ul><li>" + result.actors.join("</li><li>") + "</li></ul></dd>" : "";
   out += result.directed_by.length > 0 ? "<dt>directed_by:</dt><dd><ul><li>" + result.directed_by.join("</li><li>") + "</li></ul></dd>" : "";
   out += result.genre.length > 0 ? "<dt>genre:</dt><dd><ul><li>" + result.genre.join("</li><li>") + "</li></ul></dd>" : "";
