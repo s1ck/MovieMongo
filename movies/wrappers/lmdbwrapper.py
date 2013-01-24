@@ -143,10 +143,9 @@ class LMDBWrapper(BaseWrapper):
             # the first one
             # TODO: handle multiple initial release years
             release_date = bindings[0]['release_date']['value']
-
             # since release_date can be just an integer like '1984' but also a
             # date string like '2006-09-01' I will take this shot from the hip
-            year = int(release_date.split('-')[0])
+            year = int(release_date.split('-')[0]) if release_date else None
 
             return year
         else:
