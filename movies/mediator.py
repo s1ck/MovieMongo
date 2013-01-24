@@ -86,24 +86,27 @@ class Mediator(object):
 
                 if to_films and to_films.count() > 0:
                     to_film = to_films[0]
-                    p1 = {'source_film_id': from_id,
-                            'target_film_id': to_film['_id']
+                    p1 = {'source_film_id':
+                            self._mongo_mgr.get_object_id(from_id),
+                            'target_film_id':
+                            self._mongo_mgr.get_object_id(to_film['_id'])
                             }
-                    p2 = {'source_film_id': to_film['_id'],
-                            'target_film_id': from_id,
+                    p2 = {'source_film_id':
+                            self._mongo_mgr.get_object_id(to_film['_id']),
+                            'target_film_id':
+                            self._mongo_mgr.get_object_id(from_id),
                             }
 
                     # check if at least one of the pattern exists
-                    store = self._mongo_mgr.get_links_by_pattern(p1) is None
+                    store = self._mongo_mgr.get_links_by_pattern(p1) is not None
                     if store:
-                        store = self._mongo_mgr.get_links_by_pattern(p2) is None
+                        store = self._mongo_mgr.get_links_by_pattern(p2) is not None
                 else:
                     print "=== store_links: to_film not in db"
                     store = False
 
                 if store:
-                    self._mongo_mgr.upsert_link(film['_id'], link['value'],
-                            link['target'])
+                    self._mongo_mgr.upsert_link(from_id, to_film['_id'])
 
     def get_distinct_movies(self, films):
         # not possible, have to preserve the order

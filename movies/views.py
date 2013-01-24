@@ -31,7 +31,7 @@ mongo_mgr = MongoManager(settings.MONGO_HOST, settings.MONGO_PORT)
 mediator = Mediator(mongo_mgr)
 mediator.add_wrapper(MongoDBWrapper(mongo_mgr))
 mediator.add_wrapper(FreebaseWrapper())
-#mediator.add_wrapper(IMDBWrapper())
+mediator.add_wrapper(IMDBWrapper())
 
 
 @route('/media/:path#.+#', name='static')
