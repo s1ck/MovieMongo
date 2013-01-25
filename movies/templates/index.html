@@ -3,6 +3,18 @@
 {% block extra_head %}
   <script type="text/javascript">
   $(document).ready(function(){
+    
+    $("#info").popover({
+      html: true,
+      placement: "bottom",
+      title: "Help",
+      content: "The searchbar provides some special keywords.<br/>"
+	+ "Supported keywords are: <code>actor</code>, <code>director</code>, <code>year</code>.<br/>"
+	+ "You can use it like this: 'actor:Paul' searches for all "
+	+ "movies in <strong>your collection</strong> that provides "
+	+ "an actor with a name like 'Paul'.",
+      trigger: 'hover'
+    });
         
     $(this).ajaxStart(function(){
       $("#results").empty();
@@ -19,6 +31,7 @@
 	url: "http://localhost:8080/",
 	data: {search: $("#searchterm").val()},
 	success: function(data){
+	  data = jQuery.parseJSON(data);
 	  console.log(data);
 	  if (data.result.length == 0)
 	    $("#results").append("<div class='well well-small'><p class='lead'><i class='icon-warning-sign'></i> no results</p></div>");
@@ -74,6 +87,7 @@
     </div>
   </form>
 </div>
+<i id="info" class="icon-info-sign" style="color:blue;font-size:1.4em"></i>
 
 {% endblock %}
 

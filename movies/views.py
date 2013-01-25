@@ -34,7 +34,8 @@ mongo_mgr = MongoManager(settings.MONGO_HOST, settings.MONGO_PORT)
 mediator = Mediator(mongo_mgr)
 mediator.add_wrapper(MongoDBWrapper(mongo_mgr))
 mediator.add_wrapper(FreebaseWrapper())
-mediator.add_wrapper(IMDBWrapper())
+#mediator.add_wrapper(IMDBWrapper())
+#mediator.add_wrapper(LMDBWrapper())
 
 
 @route('/media/:path#.+#', name='static')
@@ -55,11 +56,34 @@ def index():
 
     if "search" in request.params:
         search = request.params['search']
-        films = mediator.get_films_by_name(search)
+
+        # split search string and check for special keywords
+        keyword = search.split(":")[0]
+        arg = ":".join(search.split(":")[1:])
+        if keyword in ["actor","director","year"]:
+            user_films = mongo_mgr.get_films_by_user(aaa.current_user.id)
+            user_films = [film for film in user_films if film is not None]
+            user_film_ids = [film["_id"] for film in user_films]
+
+            query = {"_id": {"$in": user_film_ids}}
+            if keyword == "actor":
+                query["actors"] = {"$in": [re.compile(arg,re.IGNORECASE)]}
+            elif keyword == "director":
+                query["directed_by"] = {"$in": [re.compile(arg,re.IGNORECASE)]}
+            elif keyword == "year":
+                query["initial_release_date"] = int(arg)
+
+            cursor = mongo_mgr.get_films_by_pattern(query)
+
+            films = {"result": cursor}
+            films = json.loads(dumps(films))
+        else:
+            films = mediator.get_films_by_name(search)
+
         for film in films['result']:
             film['my_movie'] = mongo_mgr.user_has_movie(film['_id']['$oid'], aaa.current_user.id)
 
-        return films
+        return json.dumps(films)
     else:
         if request.headers['accept'] == "application/json":
             films = mongo_mgr.get_films_by_user(aaa.current_user.id)

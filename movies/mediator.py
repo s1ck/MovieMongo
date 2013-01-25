@@ -77,39 +77,68 @@ class Mediator(object):
         opposite direction already stored in the db.
         '''
         from_id = from_film['_id']
+        from_source = from_film['source']
+        from_source_id = from_film['source_id']
 
         if 'links' in from_film:
             for link in from_film['links']:
                 # try to get linked movie
-                to_films = self._mongo_mgr.get_films_by_pattern({'source_id':
+                to_films = self._mongo_mgr.get_films_by_pattern ({'source_id':
                     link['value']})
 
-                if to_films and to_films.count() > 0:
-                    to_film = to_films[0]
-                    p1 = {'source_film_id':
-                            self._mongo_mgr.get_object_id(from_id),
-                            'target_film_id':
-                            self._mongo_mgr.get_object_id(to_film['_id'])
-                            }
-                    p2 = {'source_film_id':
-                            self._mongo_mgr.get_object_id(to_film['_id']),
-                            'target_film_id':
-                            self._mongo_mgr.get_object_id(from_id),
-                            }
-
-                    # check if at least one of the pattern exists
-                    p1_cursor = self._mongo_mgr.get_links_by_pattern (p1)
-                    store = p1_cursor is None or p1_cursor.count () == 0
-
-                    if store:
-                        p2_cursor = self._mongo_mgr.get_links_by_pattern (p2)
-                        store = p2_cursor is None or p2_cursor.count () == 0
+                if to_films.count() == 0:
+                    # create placeholder film
+                    new_film = {'source': link['target']
+                            ,'source_id': link['value']
+                            ,'name': None
+                            ,'initial_release_date': None
+                            ,'genre': []
+                            ,'directed_by': []
+                            ,'written_by': []
+                            ,'actors': []
+                            ,'img_url': None}
+                    new_id = self._mongo_mgr.upsert_film (new_film)
+                    new_film['_id'] = new_id
+                    # set the new film as target
+                    to_film = new_film
                 else:
-                    print "=== store_links: to_film not in db"
-                    store = False
+                    # take the existing one
+                    to_film = to_films[0]
 
-                if store:
-                    self._mongo_mgr.upsert_link(from_id, to_film['_id'])
+                # store backward links
+                backward_edge = {'target': from_source
+                        ,'value': from_source_id
+                        ,'oid': from_id}
+
+                # if the to_film already has links, check if this one already
+                # exists, if not add it or create new links
+                update_to_film = False
+                if 'links' in to_film.keys ():
+                    exists = False
+                    for link in to_film['links']:
+                        if link['oid'] == from_id:
+                            exists = True
+                    if not exists:
+                        to_film['links'].append (backward_edge)
+                        update_to_film = True
+                else:
+                    to_film['links'] = [backward_edge]
+                    update_to_film = True
+
+                if update_to_film:
+                    self._mongo_mgr.upsert_film (to_film)
+
+
+                # update the link with the oid
+                link['oid'] = to_film['_id']
+
+                # search the link collection if a link exists in one of the
+                # both possible directions
+                if not self._mongo_mgr.has_link (from_id, to_film['_id']):
+                    self._mongo_mgr.upsert_link (from_id, to_film['_id'])
+
+            # store updated links
+            self._mongo_mgr.upsert_film (from_film)
 
     def get_distinct_movies(self, films):
         # not possible, have to preserve the order
