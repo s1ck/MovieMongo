@@ -8,6 +8,9 @@ from movies.wrappers.base import BaseWrapper
 class DBpediaWrapper(BaseWrapper):
 
     def __init__(self):
+        """FIXME: this is just a prototype which won't give you much useful
+        data and so has to be rewritten or removed
+        """
         self.name = 'dbpedia'
         self.endpoint = SPARQLWrapper('http://dbpedia.org/sparql')
         self.endpoint.setReturnFormat(JSON)
@@ -117,7 +120,7 @@ class DBpediaWrapper(BaseWrapper):
                 ?movie dbpedia2:title ?title.
                 ?title rdfs:label "%(query_str)s".
             }
-        }'''
+        }'''  # for the birds...
 
     def get_name(self):
         return self.name
@@ -141,6 +144,6 @@ class DBpediaWrapper(BaseWrapper):
         return {'result': movies}
 
     def _query_movie_data(self, uri):
-        import pdb; pdb.set_trace()
+        """TODO: implement
+        """
         pass
-
