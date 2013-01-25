@@ -19,6 +19,7 @@
 	url: "http://localhost:8080/",
 	data: {search: $("#searchterm").val()},
 	success: function(data){
+	  data = jQuery.parseJSON(data);
 	  console.log(data);
 	  if (data.result.length == 0)
 	    $("#results").append("<div class='well well-small'><p class='lead'><i class='icon-warning-sign'></i> no results</p></div>");
