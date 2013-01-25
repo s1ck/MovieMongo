@@ -43,7 +43,7 @@ function format_details(result){
   if (result.links && result.links.length > 0){
     out += "<br/><strong>other sources: </strong>";
     for (link in result.links)
-      out += "<abbr title='id: " + result.links[link].value + "'>" + result.links[link].target + "</abbr> ";
+      out += "<a href='" + result.links[link].oid.$oid + "'>" + result.links[link].target + "</a> ";
   }
   out += "</p>";
   out += "  <hr/><div class='pull-left'><h4>Details:</h4><dl class='dl-horizontal'>";
