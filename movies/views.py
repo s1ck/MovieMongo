@@ -67,9 +67,9 @@ def index():
 
             query = {"_id": {"$in": user_film_ids}}
             if keyword == "actor":
-                query["actors"] = {"$in": [arg]}
+                query["actors"] = {"$in": [re.compile(arg,re.IGNORECASE)]}
             elif keyword == "director":
-                query["directed_by"] = {"$in": [arg]}
+                query["directed_by"] = {"$in": [re.compile(arg,re.IGNORECASE)]}
             elif keyword == "year":
                 query["initial_release_date"] = int(arg)
 
