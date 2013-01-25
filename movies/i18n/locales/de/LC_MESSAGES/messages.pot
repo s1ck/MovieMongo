@@ -19,40 +19,40 @@ msgstr ""
 
 #: movies/views.py:177
 msgid "test1"
-msgstr "This is just a test..."
+msgstr "Dies ist nur ein Test..."
 
 #: movies/views.py:178
 msgid "test2"
-msgstr "...and this, too."
+msgstr "...und das hier auch."
 
 #: movies/views.py:119
 msgid "name"
 msgstr "Name"
 
 msgid "img_url"
-msgstr "Image URL"
+msgstr "Bild-URL"
 
 msgid "created_at"
-msgstr "Created at"
+msgstr "Entstehungsjahr"
 
 msgid "source"
-msgstr "Source"
+msgstr "Quelle"
 
 msgid "actors"
-msgstr "Actors"
+msgstr "Schauspieler"
 
 msgid "written_by"
-msgstr "Written by"
+msgstr "Drehbuch"
 
 msgid "directed_by"
-msgstr "Directed by"
+msgstr "Regie"
 
 msgid "source_id"
-msgstr "Source ID"
+msgstr "Quell-ID"
 
 msgid "genre"
 msgstr "Genre(s)"
 
 msgid "initial_release_date"
-msgstr "Initial release date"
+msgstr "Erscheinungsjahr"
 

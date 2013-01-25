@@ -1,8 +1,8 @@
-#: movies/views.py:142
+#: movies/views.py:177
 msgid "test1"
 msgstr "This is an English test..."
 
-#: movies/views.py:143
+#: movies/views.py:178
 msgid "test2"
 msgstr "...and this, too."
 

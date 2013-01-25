@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # build template
-xgettext --files-from=movies/i18n/POTFILES.in --directory=./ --output=movies/i18n/locales/template/LC_MESSAGES/messages.pot
+#xgettext --files-from=movies/i18n/POTFILES.in --directory=./ --output=movies/i18n/locales/template/LC_MESSAGES/messages.pot
 # backup old translation file
-cp movies/i18n/locales/en/LC_MESSAGES/messages.pot movies/i18n/locales/en/LC_MESSAGES/messages.pot.bak
+#cp movies/i18n/locales/en/LC_MESSAGES/messages.pot movies/i18n/locales/en/LC_MESSAGES/messages.pot.bak
 # create english translation file
 cp movies/i18n/locales/template/LC_MESSAGES/messages.pot movies/i18n/locales/en/LC_MESSAGES/messages.pot 
 # edit it
