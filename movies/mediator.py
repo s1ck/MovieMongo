@@ -92,7 +92,7 @@ class Mediator(object):
                             ,'source_id': link['value']
                             ,'name': None
                             ,'initial_release_date': None
-                            ,'genre': None
+                            ,'genre': []
                             ,'directed_by': []
                             ,'written_by': []
                             ,'actors': []
