@@ -14,7 +14,7 @@ class IMDBWrapper(BaseWrapper):
     def get_name(self):
         return self.name
 
-    def get_films_by_name(self, name):
+    def get_films_by_name(self, name, exclude_ids=[]):
         results = self.__db.search_movie(name)
         # results looks sth like this:
         # >>> pp(results)

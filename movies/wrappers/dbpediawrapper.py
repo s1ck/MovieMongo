@@ -129,7 +129,7 @@ class DBpediaWrapper(BaseWrapper):
         movie = self._query_movie_data(film_id)
         return movie
 
-    def get_films_by_name(self, name):
+    def get_films_by_name(self, name, exclude_ids=[]):
         # get movie resources via SPARQL query
         self.endpoint.setQuery(self.query_movie % {'query_str': name})
         sparql_res = self.endpoint.query().convert()

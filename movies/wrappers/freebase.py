@@ -19,7 +19,7 @@ class FreebaseWrapper(BaseWrapper):
     def get_name(self):
         return self.name
 
-    def get_films_by_name(self, name):
+    def get_films_by_name(self, name, exclude_ids=[]):
         query = [{
             'name~=': name,  # LIKE "%name"
             'name': None,  # MUST have name
@@ -72,7 +72,7 @@ class FreebaseWrapper(BaseWrapper):
                     self._get_year),
             'directed_by': ('directed_by', None),
             'written_by': ('written_by', None),
-            'starring' : ('actors', self._get_actors),
+            'starring': ('actors', self._get_actors),
             'genre': ('genre', None),
             'key': ('links', self._get_links),
         }
@@ -143,7 +143,7 @@ class FreebaseWrapper(BaseWrapper):
             actors.append(name)
 
         return actors
-    
+
     def _get_links(self, link_vals):
         """
         :param link_vals: sth like this:

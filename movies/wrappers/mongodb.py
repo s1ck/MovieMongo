@@ -12,7 +12,7 @@ class MongoDBWrapper(BaseWrapper):
     def get_name(self):
         return "mongodb"
 
-    def get_films_by_name(self, name):
+    def get_films_by_name(self, name, exclude_ids=[]):
         films = {}
         films['result'] = []
         mongo_result = self._mongo_mgr.get_films_by_regex('name', name)

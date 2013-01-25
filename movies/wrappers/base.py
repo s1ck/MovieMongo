@@ -6,7 +6,7 @@ class BaseWrapper(object):
     other wrappers
     """
 
-    def get_films_by_name(self, name):
+    def get_films_by_name(self, name, exclude_ids=[]):
         """Returns all films which match the given name.
         Function returns an dictionary, access the films via:
             return_val['result']
