@@ -81,35 +81,32 @@ class Mediator(object):
         if 'links' in from_film:
             for link in from_film['links']:
                 # try to get linked movie
-                to_films = self._mongo_mgr.get_films_by_pattern({'source_id':
+                to_films = self._mongo_mgr.get_films_by_pattern ({'source_id':
                     link['value']})
 
-                if to_films and to_films.count() > 0:
-                    to_film = to_films[0]
-                    p1 = {'source_film_id':
-                            self._mongo_mgr.get_object_id(from_id),
-                            'target_film_id':
-                            self._mongo_mgr.get_object_id(to_film['_id'])
-                            }
-                    p2 = {'source_film_id':
-                            self._mongo_mgr.get_object_id(to_film['_id']),
-                            'target_film_id':
-                            self._mongo_mgr.get_object_id(from_id),
-                            }
-
-                    # check if at least one of the pattern exists
-                    p1_cursor = self._mongo_mgr.get_links_by_pattern (p1)
-                    store = p1_cursor is None or p1_cursor.count () == 0
-
-                    if store:
-                        p2_cursor = self._mongo_mgr.get_links_by_pattern (p2)
-                        store = p2_cursor is None or p2_cursor.count () == 0
+                if to_films.count() == 0:
+                    # create placeholder film
+                    new_film = {'source': link['target']
+                            ,'source_id': link['value']}
+                    new_id = self._mongo_mgr.upsert_film (new_film)
+                    new_film['_id'] = new_id
+                    # set the new film as target
+                    to_film = new_film
+                    print '=== created placeholder with oid:', new_id
                 else:
-                    print "=== store_links: to_film not in db"
-                    store = False
+                    # take the existing one
+                    to_film = to_films[0]
 
-                if store:
-                    self._mongo_mgr.upsert_link(from_id, to_film['_id'])
+                # update the link with the oid
+                link['oid'] = to_film['_id']
+
+                # search the link collection if a link exists in one of the
+                # both possible directions
+                if not self._mongo_mgr.has_link (from_id, to_film['_id']):
+                    self._mongo_mgr.upsert_link (from_id, to_film['_id'])
+
+            # store updated links
+            self._mongo_mgr.upsert_film (from_film)
 
     def get_distinct_movies(self, films):
         # not possible, have to preserve the order
