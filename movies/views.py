@@ -33,10 +33,8 @@ aaa = Cork(backend)
 mongo_mgr = MongoManager(settings.MONGO_HOST, settings.MONGO_PORT)
 mediator = Mediator(mongo_mgr)
 mediator.add_wrapper(MongoDBWrapper(mongo_mgr))
-#mediator.add_wrapper(FreebaseWrapper())
-#mediator.add_wrapper(LMDBWrapper())
-mediator.add_wrapper(DBpediaWrapper())
-#mediator.add_wrapper(IMDBWrapper())
+mediator.add_wrapper(FreebaseWrapper())
+mediator.add_wrapper(IMDBWrapper())
 
 
 @route('/media/:path#.+#', name='static')
@@ -64,14 +62,11 @@ def index():
         return films
     else:
         if request.headers['accept'] == "application/json":
-            films = mediator.get_films_by_name('Matrix')
-
-            # films = mongo_mgr.get_films_by_user(aaa.current_user.id)
-            # for film in films:
-            #     film['my_movie'] = True
-            #return json.loads(dumps(films))
-
-            return films
+            films = mongo_mgr.get_films_by_user(aaa.current_user.id)
+            films = [film for film in films if film is not None]
+            for film in films:
+                film['my_movie'] = True
+            return dumps(films)
         else:
             return template("index.html", user=aaa.current_user.username)
 
