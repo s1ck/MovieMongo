@@ -3,6 +3,18 @@
 {% block extra_head %}
   <script type="text/javascript">
   $(document).ready(function(){
+    
+    $("#info").popover({
+      html: true,
+      placement: "bottom",
+      title: "Help",
+      content: "The searchbar provides some special keywords.<br/>"
+	+ "Supported keywords are: <code>actor</code>, <code>director</code>, <code>year</code>.<br/>"
+	+ "You can use it like this: 'actor:Paul' searches for all "
+	+ "movies in <strong>your collection</strong> that provides "
+	+ "an actor with a name like 'Paul'.",
+      trigger: 'hover'
+    });
         
     $(this).ajaxStart(function(){
       $("#results").empty();
@@ -75,7 +87,7 @@
     </div>
   </form>
 </div>
-<i title="Supported keywords: actor, director, year" class="icon-info-sign" style="color:blue;font-size:1.4em"></i>
+<i id="info" class="icon-info-sign" style="color:blue;font-size:1.4em"></i>
 
 {% endblock %}
 
