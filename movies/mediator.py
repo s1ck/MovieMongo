@@ -89,7 +89,14 @@ class Mediator(object):
                 if to_films.count() == 0:
                     # create placeholder film
                     new_film = {'source': link['target']
-                            ,'source_id': link['value']}
+                            ,'source_id': link['value']
+                            ,'name': None
+                            ,'initial_release_date': None
+                            ,'genre': None
+                            ,'directed_by': []
+                            ,'written_by': []
+                            ,'actors': []
+                            ,'img_url': None}
                     new_id = self._mongo_mgr.upsert_film (new_film)
                     new_film['_id'] = new_id
                     # set the new film as target
