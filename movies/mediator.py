@@ -77,6 +77,8 @@ class Mediator(object):
         opposite direction already stored in the db.
         '''
         from_id = from_film['_id']
+        from_source = from_film['source']
+        from_source_id = from_film['source_id']
 
         if 'links' in from_film:
             for link in from_film['links']:
@@ -92,10 +94,33 @@ class Mediator(object):
                     new_film['_id'] = new_id
                     # set the new film as target
                     to_film = new_film
-                    print '=== created placeholder with oid:', new_id
                 else:
                     # take the existing one
                     to_film = to_films[0]
+
+                # store backward links
+                backward_edge = {'target': from_source
+                        ,'value': from_source_id
+                        ,'oid': from_id}
+
+                # if the to_film already has links, check if this one already
+                # exists, if not add it or create new links
+                update_to_film = False
+                if 'links' in to_film.keys ():
+                    exists = False
+                    for link in to_film['links']:
+                        if link['oid'] == from_id:
+                            exists = True
+                    if not exists:
+                        to_film['links'].append (backward_edge)
+                        update_to_film = True
+                else:
+                    to_film['links'] = [backward_edge]
+                    update_to_film = True
+
+                if update_to_film:
+                    self._mongo_mgr.upsert_film (to_film)
+
 
                 # update the link with the oid
                 link['oid'] = to_film['_id']
