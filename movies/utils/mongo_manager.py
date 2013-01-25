@@ -24,7 +24,6 @@ class MongoManager(object):
 
         returns the _id of the saved film
         """
-        print '=== upsert_film(', film['name'], ')'
         try:
             if '_id' in film.keys():
                 film['modified_at'] = time.time()
@@ -44,7 +43,6 @@ class MongoManager(object):
 
     def get_films_by_name(self, name):
         try:
-            print "=== get_films_by_name(", name, ")"
             return self._movie_coll.find({'name': name})
         except:
             print sys.exc_info()[1]
@@ -146,6 +144,31 @@ class MongoManager(object):
        except:
            print sys.exc_info()[1]
            return None
+
+    def has_link(self, from_id, to_id):
+        exists = False
+        # A -> B
+        p1 = {'source_film_id':
+                self.get_object_id (from_id),
+                'target_film_id':
+                self.get_object_id (to_id)
+                }
+        # B -> A
+        p2 = {'source_film_id':
+                self.get_object_id (to_id),
+                'target_film_id':
+                self.get_object_id (from_id),
+                }
+
+        # check if at least one of the pattern exists
+        p1_cursor = self.get_links_by_pattern (p1)
+        exists = p1_cursor is None or p1_cursor.count () == 0
+
+        if exists:
+            p2_cursor = self.get_links_by_pattern (p2)
+            exists = p2_cursor is None or p2_cursor.count () == 0
+
+        return exists
 
     def upsert_link(self, from_id, to_id):
         try:

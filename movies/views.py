@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import sys
 import re
 import json
@@ -10,6 +11,7 @@ from movies.wrappers.freebase import FreebaseWrapper
 from movies.wrappers.mongodb import MongoDBWrapper
 from movies.wrappers.imdbwrapper import IMDBWrapper
 from movies.wrappers.lmdbwrapper import LMDBWrapper
+from movies.wrappers.dbpediawrapper import DBpediaWrapper
 from utils import MongoManager
 from utils.cork import Cork
 from utils.cork.mongo_backend import MongoDbBackend
@@ -18,13 +20,13 @@ from movies import settings
 TEMPLATE_PATH.append("./movies/templates")
 
 backend = MongoDbBackend(
-   server = settings.MONGO_HOST,
-   port = settings.MONGO_PORT,
-   database = settings.MONGO_DB,
-   initialize=False,
-   users_store="user",
-   roles_store="roles",
-   pending_regs_store="register",
+    server=settings.MONGO_HOST,
+    port=settings.MONGO_PORT,
+    database=settings.MONGO_DB,
+    initialize=False,
+    users_store="user",
+    roles_store="roles",
+    pending_regs_store="register",
 )
 aaa = Cork(backend)
 
@@ -42,6 +44,7 @@ def static(path):
     Method for serving static files like stylesheets or images.
     """
     return static_file(path, root='media')
+
 
 @route('/')
 def index():
@@ -91,6 +94,7 @@ def index():
         else:
             return template("index.html", user=aaa.current_user.username)
 
+
 @route('/:id', method="GET")
 def get_movie(id):
     """
@@ -104,6 +108,7 @@ def get_movie(id):
     else:
         return template("details.html", user=aaa.current_user.username)
 
+
 @route('/', method="POST")
 def post_movie():
     """
@@ -111,6 +116,7 @@ def post_movie():
     """
     id = request.params.get('id')
     mongo_mgr.add_film_to_user(id, aaa.current_user.id)
+
 
 @route('/', method="DELETE")
 def delete_movie():
@@ -121,9 +127,11 @@ def delete_movie():
     id = request.params.get('id')
     mongo_mgr.remove_film_from_user(id, aaa.current_user.id)
 
+
 @route('/register', method='GET')
 def register():
     return template("register.html")
+
 
 @route('/register', method='POST')
 def register():
@@ -134,9 +142,11 @@ def register():
     aaa.register(username, password, "none@example.com")
     redirect("/")
 
+
 @route('/login', method="GET")
 def login_get():
     return template("login.html")
+
 
 @route('/login', method="POST")
 def login():
@@ -144,6 +154,7 @@ def login():
     username = request.params['username'].strip()
     password = request.params['password'].strip()
     aaa.login(username, password, success_redirect='/', fail_redirect='/login')
+
 
 @route('/logout')
 def logout():
