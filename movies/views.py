@@ -34,7 +34,7 @@ mongo_mgr = MongoManager(settings.MONGO_HOST, settings.MONGO_PORT)
 mediator = Mediator(mongo_mgr)
 mediator.add_wrapper(MongoDBWrapper(mongo_mgr))
 mediator.add_wrapper(FreebaseWrapper())
-#mediator.add_wrapper(IMDBWrapper())
+mediator.add_wrapper(IMDBWrapper())
 #mediator.add_wrapper(LMDBWrapper())
 
 
@@ -101,13 +101,34 @@ def get_movie(id):
     This method delivers all the details available for a given movie.
     """
     if id and request.headers['accept'] == "application/json":
-        film = json.loads(dumps(mongo_mgr.get_film_by_id(id)))
+        film = mongo_mgr.get_film_by_id (id)
+        # handling template movies
+        # if the requested film is still a template (name is None), the source
+        # and the source_id will be used to get the full data
+        if film['name'] is None:
+            film = mediator.update_template_film (film)
+
+            '''
+            wrapper = mediator.get_wrapper (film['source'])
+            if not wrapper:
+                print "No wrapper found for:", film['source']
+            else:
+                result = wrapper.get_film_by_id (film['source_id'])
+                if result and len (result['result']) > 0:
+                    remote_film = result['result'][0]
+                    remote_film['_id'] = film['_id']
+                    remote_film['links'] = film['links']
+                    mongo_mgr.upsert_film (remote_film)
+                    film = json.loads (dumps (remote_film))
+                else:
+                    print "No film found at %s with id %s" % (film['source'],
+                            film['source_id'])
+            '''
         user_has_movie = mongo_mgr.user_has_movie(id, aaa.current_user.id)
         film['my_movie'] = user_has_movie
-        return film
+        return json.loads(dumps(film))
     else:
         return template("details.html", user=aaa.current_user.username)
-
 
 @route('/', method="POST")
 def post_movie():

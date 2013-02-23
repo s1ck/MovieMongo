@@ -12,6 +12,12 @@ class Mediator(object):
     def add_wrapper(self, wrapper):
         self._wrappers[wrapper.get_name()] = wrapper
 
+    def get_wrapper(self, wrapper_name):
+        if wrapper_name in self._wrappers.keys ():
+            return self._wrappers[wrapper_name]
+        else:
+            return None
+
     def get_films_by_name(self, name):
         films = {}
         films['result'] = []
@@ -139,6 +145,32 @@ class Mediator(object):
 
             # store updated links
             self._mongo_mgr.upsert_film (from_film)
+
+    def update_template_film (self, film):
+        '''
+        Tries to get the full information of the template film using the source
+        information. If the full information could be retrieved, the template
+        film will be updated in the database.
+
+        If the full information could not be retrieved, the template film is
+        returned.
+        '''
+        wrapper = self.get_wrapper (film['source'])
+        if not wrapper:
+            print "No wrapper found for:", film['source']
+            return film
+        else:
+            result = wrapper.get_film_by_id (film['source_id'])
+            if result and len (result['result']) > 0:
+                remote_film = result['result'][0]
+                remote_film['_id'] = film['_id']
+                remote_film['links'] = film['links']
+                self._mongo_mgr.upsert_film (remote_film)
+                return remote_film
+            else:
+                print "No film found at %s with id %s" % (film['source'],
+                        film['source_id'])
+                return film
 
     def get_distinct_movies(self, films):
         # not possible, have to preserve the order

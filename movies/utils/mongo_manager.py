@@ -29,6 +29,7 @@ class MongoManager(object):
                 film['modified_at'] = time.time()
             else:
                 film['created_at'] = time.time()
+            print "=== saving film"
             return self._movie_coll.save(film)
         except:
             print sys.exc_info()[1]
