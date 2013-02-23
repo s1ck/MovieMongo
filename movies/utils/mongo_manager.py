@@ -134,7 +134,7 @@ class MongoManager(object):
 
     def get_link_by_id(self, link_id):
         try:
-            return self._link_coll.find_one({'_id': get_object_id(link_id)})
+            return self._link_coll.find_one({'_id': self.get_object_id(link_id)})
         except:
             print sys.exc_info()[1]
             return None
