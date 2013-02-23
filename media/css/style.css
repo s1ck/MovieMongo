@@ -62,4 +62,8 @@ div#search{
 .icon-minus-sign{
     font-size: 1.4em;
     color: red;
-    }    
+    }
+
+#uc_add, .uc_del{
+    cursor: pointer;
+    }

@@ -54,10 +54,8 @@ function format_details(result){
   out += result.written_by.length > 0 ? "<dt>written by:</dt><dd><ul><li>" + result.written_by.join("</li><li>") + "</li></ul></dd>" : "";
   out += "</dl></div>";
   if (result.my_movie){
-    out += "<div class='pull-right' style='width:40%'><h4>User content:</h4><div id='forms' class='pull-right'>";
-    out += "<table><tr><td><strong>verborgt an:</strong></td><td>Andreas</td><td><i class='icon-minus-sign'></i></td></tr>";
-    out += "<tr><td><input type='text' class='input-small' placeholder='Key'/></td><td><input type='text' placeholder='Value'/></td><td><i class='icon-plus-sign'></i></td></tr></table>";
-    out += "</div></div>";
+    out += "<span id='usercontent'></span>"
+    get_usercontent(result._id.$oid);
   }
   out += "</div>";
   return out;

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import sys
 import re
 import json
 
@@ -130,6 +129,31 @@ def delete_movie():
     """
     id = request.params.get('id')
     mongo_mgr.remove_film_from_user(id, aaa.current_user.id)
+
+
+@route('/usercontent/<id>')
+def get_usercontent(id):
+    user = aaa.current_user.id
+
+    data = mongo_mgr.get_usercontent(id, user)
+    return dumps(data)
+
+
+@route('/usercontent', method="POST")
+def post_usercontent():
+    id = request.params.get('id')
+    user = aaa.current_user.id
+    key = request.params.get('key')
+    value = request.params.get('value')
+
+    mongo_mgr.upsert_usercontent(id, user, key, value)
+
+
+@route('/usercontent', method="DELETE")
+def delete_usercontent():
+    id = request.params.get('id')
+
+    mongo_mgr.remove_usercontent(id)
 
 
 @route('/register', method='GET')

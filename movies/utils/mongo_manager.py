@@ -197,7 +197,36 @@ class MongoManager(object):
             print sys.exc_info()[1]
             return None
 
-    # helpers
+    # user content methods
+
+    def get_usercontent(self, film_id, user_id):
+        try:
+            return self._ucontent_coll.find({'user_id': user_id, 'film_id': film_id})
+        except:
+            print sys.exc_info()[1]
+            return None
+
+    def upsert_usercontent(self, film_id, user_id, key, value):
+        try:
+            return self._ucontent_coll.save({
+                    "user_id": user_id,
+                    "film_id": film_id,
+                    "created_at": time.time(),
+                    "key": key,
+                    "value": value
+                    })
+        except:
+            print sys.exc_info()[1]
+            return None
+
+    def remove_usercontent(self, id):
+        try:
+            return self._ucontent_coll.remove({'_id': self.get_object_id(id)})
+        except:
+            print sys.exc_info()[1]
+            return None
+
+# helpers
 
     def get_object_id(self, identifier):
         return identifier if isinstance(identifier, ObjectId) \

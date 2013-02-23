@@ -12,6 +12,54 @@
       }
     });
   });
+
+
+  function get_usercontent(id){
+    $.ajax({
+      url: "http://localhost:8080/usercontent/" + id,
+      success: function(data){
+	data = jQuery.parseJSON(data);
+	console.log(data);
+	$("#usercontent").empty();
+	out = "<div class='pull-right' style='width:40%'><h4>User content:</h4><div id='forms' class='pull-right'>";
+	out += "<table>";
+	for(row in data){
+	  out += "<tr id='" + data[row]._id.$oid + "'><td class><strong>" + data[row].key + ":</strong></td><td>" + data[row].value + "</td><td><i class='icon-minus-sign uc_del' onclick=\"return del_usercontent(event,\'"+ data[row]._id.$oid + "\');\"></i></td></tr>";
+	}
+	out += "<tr><td><input type='text' id='uc_key' class='input-small' placeholder='Key'/></td><td><input type='text' id='uc_value' placeholder='Value'/></td><td><i id='uc_add' class='icon-plus-sign' onclick=\"return add_usercontent(event,\'"+ id + "\');\"></i></td></tr></table>";
+	out += "</div></div>";
+	$("#usercontent").append(out);
+      }
+    });
+  }
+  
+  function add_usercontent(event, id){
+    key = $("#uc_key").val();
+    value = $("#uc_value").val();
+    console.log(id+","+key+","+value);
+    $.ajax({
+      url: "http://localhost:8080/usercontent",
+      type: "POST",
+      data: {id: id, key: key, value: value},
+      success: function(data){
+	console.log("success");
+	get_usercontent(id);
+      }
+    });
+  };
+    
+  function del_usercontent(event, id){
+    console.log("hi");
+    $.ajax({
+      url: "http://localhost:8080/usercontent",
+      type: "DELETE",
+      data: {id: id},
+      success: function(data){
+	$("tr#"+id).fadeOut("slow");
+	console.log("success");
+      }
+    });
+  };
   </script>
 {% endblock %}
 
