@@ -107,23 +107,6 @@ def get_movie(id):
         # and the source_id will be used to get the full data
         if film['name'] is None:
             film = mediator.update_template_film (film)
-
-            '''
-            wrapper = mediator.get_wrapper (film['source'])
-            if not wrapper:
-                print "No wrapper found for:", film['source']
-            else:
-                result = wrapper.get_film_by_id (film['source_id'])
-                if result and len (result['result']) > 0:
-                    remote_film = result['result'][0]
-                    remote_film['_id'] = film['_id']
-                    remote_film['links'] = film['links']
-                    mongo_mgr.upsert_film (remote_film)
-                    film = json.loads (dumps (remote_film))
-                else:
-                    print "No film found at %s with id %s" % (film['source'],
-                            film['source_id'])
-            '''
         user_has_movie = mongo_mgr.user_has_movie(id, aaa.current_user.id)
         film['my_movie'] = user_has_movie
         return json.loads(dumps(film))
