@@ -15,8 +15,15 @@
 
 	console.log(data);
 	$("#results").append(format_details(data));
+	$( "#accordion" ).accordion({
+	  collapsible: true,
+	  heightStyle: "content",
+	  active: false
+	});
+
       }
     });
+    
   });
 
   function get_usercontent(id){

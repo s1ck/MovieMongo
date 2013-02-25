@@ -10,4 +10,6 @@ pip install beaker
 pip install pycrypto
 pip install jinja2
 
+python db_setup.py
+
 exit 0
