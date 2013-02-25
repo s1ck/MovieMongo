@@ -29,7 +29,7 @@ class IMDBWrapper(BaseWrapper):
         for result in results:
             movie_id = result.movieID
             if result['kind'] not in ['movie', 'tv movie'] or \
-                    movie_id in exclude_ids:
+                    'tt' + movie_id in exclude_ids:
                 continue
 
             # this will take a long long time to finish
