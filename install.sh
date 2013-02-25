@@ -8,5 +8,6 @@ pip install -e hg+https://bitbucket.org/alberanid/imdbpy@b68f89904b171d6393bcf10
 pip install SPARQLWrapper
 pip install beaker
 pip install pycrypto
+pip install jinja2
 
 exit 0
