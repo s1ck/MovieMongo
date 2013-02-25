@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from bson.json_util import dumps
+import time
 import json
 
 
@@ -8,6 +9,9 @@ class Mediator(object):
     def __init__(self, mongo_mgr):
         self._mongo_mgr = mongo_mgr
         self._wrappers = {}
+
+        self._c_interv = int (mongo_mgr.get_property
+                ('cache_invalidation_interval'))
 
     def add_wrapper(self, wrapper):
         self._wrappers[wrapper.get_name()] = wrapper
@@ -19,6 +23,7 @@ class Mediator(object):
             return None
 
     def get_films_by_name(self, name):
+        now = int(time.time())
         films = {}
         films['result'] = []
         exclusion = {}
@@ -28,10 +33,12 @@ class Mediator(object):
             mongo_wrapper = self._wrappers['mongodb']
             films['result'] += mongo_wrapper.get_films_by_name (name)['result']
             for film in films['result']:
-                if film['source'] not in exclusion.keys ():
-                    exclusion[film['source']] = [film['source_id']]
-                else:
-                    exclusion[film['source']].append (film['source_id'])
+                # exclude films from search which have been lately collected
+                if (now - film['modified_at']) < self._c_interv:
+                    if film['source'] not in exclusion.keys ():
+                        exclusion[film['source']] = [film['source_id']]
+                    else:
+                        exclusion[film['source']].append (film['source_id'])
 
         for k,v in self._wrappers.iteritems ():
             if k is not 'mongodb':
@@ -42,7 +49,7 @@ class Mediator(object):
                             exclusion[k])['result']
 
         # stage 1: store non exisiting films in the database
-        self.store_films(films['result'])
+        self.store_films(films['result'], now)
 
         # stage 2: get distinct movies
         films['result'] = self.get_distinct_movies(films['result'])
@@ -61,7 +68,7 @@ class Mediator(object):
             return self._wrappers[source].get_film_by_id(film_id)
         return None
 
-    def store_films(self, films):
+    def store_films(self, films, now):
         '''
         checks if the found films exist in the database using their name,
         initial_release_date and the source attribute to guarantee uniqueness.
@@ -80,11 +87,18 @@ class Mediator(object):
                 }
                 db_films = self._mongo_mgr.get_films_by_pattern(pattern)
                 if db_films is None or db_films.count() == 0:
+                    # film not found, store it
                     film['_id'] = self._mongo_mgr.upsert_film(film)
                 else:
-                    # match (p.e. by year) if this is really the same film
-                    film['_id'] = db_films[0]['_id']
-                    print('=== found movie with same name, skip store')
+                    # film has been found, check if it has to be updated
+                    persistent_film = db_films[0]
+                    film['_id'] = persistent_film['_id']
+                    if (now - persistent_film['modified_at']) > self._c_interv:
+                        # update cache and rescue the links if exist
+                        if 'links' in persistent_film.keys ():
+                            film['links'] = persistent_film['links']
+                        self._mongo_mgr.upsert_film (film)
+                        print '=== cache updated'
             else:
                 print('=== movie has _id, skip store')
 
@@ -101,6 +115,7 @@ class Mediator(object):
         from_id = from_film['_id']
         from_source = from_film['source']
         from_source_id = from_film['source_id']
+        update_from_film = False
 
         if 'links' in from_film:
             for link in from_film['links']:
@@ -150,9 +165,10 @@ class Mediator(object):
                 if update_to_film:
                     self._mongo_mgr.upsert_film (to_film)
 
-
                 # update the link with the oid
-                link['oid'] = to_film['_id']
+                if 'oid' not in link.keys ():
+                    link['oid'] = to_film['_id']
+                    update_from_film = True
 
                 # search the link collection if a link exists in one of the
                 # both possible directions
@@ -160,7 +176,8 @@ class Mediator(object):
                     self._mongo_mgr.upsert_link (from_id, to_film['_id'])
 
             # store updated links
-            self._mongo_mgr.upsert_film (from_film)
+            if update_from_film:
+                self._mongo_mgr.upsert_film (from_film)
 
     def update_template_film (self, film):
         '''

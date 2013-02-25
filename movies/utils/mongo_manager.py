@@ -14,6 +14,7 @@ class MongoManager(object):
         self._link_coll = self._c.wcm12.link
         self._user_coll = self._c.wcm12.user
         self._ucontent_coll = self._c.wcm12.usercontent
+        self._property_coll = self._c.wcm12.properties
 
     # film methods
 
@@ -26,9 +27,10 @@ class MongoManager(object):
         """
         try:
             if '_id' in film.keys():
-                film['modified_at'] = time.time()
+                film['modified_at'] = int(time.time())
             else:
-                film['created_at'] = time.time()
+                film['created_at'] = int(time.time())
+                film['modified_at'] = film['created_at']
             print "=== saving film"
             return self._movie_coll.save(film)
         except:
@@ -231,4 +233,8 @@ class MongoManager(object):
     def get_object_id(self, identifier):
         return identifier if isinstance(identifier, ObjectId) \
             else ObjectId(str(identifier))
+
+    def get_property (self, key):
+        return self._property_coll.find_one ({'_id': key})['value']
+
 

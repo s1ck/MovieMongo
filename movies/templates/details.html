@@ -4,7 +4,7 @@
   <script type="text/javascript">
   $().ready(function(){
     $.ajax({
-      url: document.URL,//"http://localhost:8080/The%20matrix",
+      url: document.URL,
       headers: {Accept:"application/json"},
       success: function(data){
 	console.log(data);
@@ -20,7 +20,7 @@
       success: function(data){
 	data = jQuery.parseJSON(data);
 	$("#usercontent").empty();
-	out = "<div class='pull-right' style='width:40%'><h4>User content:</h4><div id='forms' class='pull-right'>";
+	out = "<div class='pull-right' style='width:40%'><h4>" + $.i18n("User content") + ":</h4><div id='forms' class='pull-right'>";
 	out += "<table>";
 	for(row in data){
 	  out += "<tr id='" + data[row]._id.$oid + "'><td class><strong>" + data[row].key + ":</strong></td><td>" + data[row].value + "</td><td><i class='icon-minus-sign uc_del' onclick=\"return del_usercontent(event,\'"+ data[row]._id.$oid + "\');\"></i></td></tr>";
