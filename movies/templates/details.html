@@ -6,13 +6,18 @@
     $.ajax({
       url: document.URL,
       headers: {Accept:"application/json"},
+      beforeSend: function(){
+	$("#results").empty();
+	$("#results").append("<div id='overlay'><img src='/media/img/ajax-loader.gif' /></div>");	
+      },
       success: function(data){
+	$("#overlay").remove();
+
 	console.log(data);
 	$("#results").append(format_details(data));
       }
     });
   });
-
 
   function get_usercontent(id){
     $.ajax({
