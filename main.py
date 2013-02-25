@@ -8,7 +8,6 @@ sys.path.insert(0, package_dir_path)
 from bottle import app, run, route
 # the i18n import adds the '_( ... )' function to the builtin scope which can
 # then be used everywhere in the current interpreter session
-from movies import i18n
 from movies import views
 from beaker.middleware import SessionMiddleware
 
