@@ -78,6 +78,11 @@ class LMDBWrapper(BaseWrapper):
             #     u'value': u'http://data.linkedmdb.org/resource/film/94307'}
             # }
             uri = res['movie']['value']
+
+            # exclude movies already in the database
+            if uri in exclude_ids:
+                continue
+
             movie = self._query_movie_data(uri)
             movies.append(movie)
 
