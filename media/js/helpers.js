@@ -46,13 +46,13 @@ function format_details(result){
       out += "<a href='" + result.links[link].oid.$oid + "'>" + result.links[link].target + "</a> ";
   }
   out += "</p>";
-  out += "  <hr/><div class='pull-left'><h4>Details:</h4><dl class='dl-horizontal'>";
-  out += result.actors.length > 0 ? "<dt>"+ $.i18n("actors") + ":</dt><dd><ul><li>" + result.actors.join("</li><li>") + "</li></ul></dd>" : "";
-  out += result.directed_by.length > 0 ? "<dt>" + $.i18n("directed_by") + ":</dt><dd><ul><li>" + result.directed_by.join("</li><li>") + "</li></ul></dd>" : "";
-  out += result.genre.length > 0 ? "<dt>" + $.i18n("genre") + ":</dt><dd><ul><li>" + result.genre.join("</li><li>") + "</li></ul></dd>" : "";
-  out += result.initial_release_date ? "  <dt>" + $.i18n("released") + ":</dt><dd>" + result.initial_release_date + "</dd>" : "";
-  out += result.written_by.length > 0 ? "<dt>" + $.i18n("written by") + ":</dt><dd><ul><li>" + result.written_by.join("</li><li>") + "</li></ul></dd>" : "";
-  out += "</dl></div>";
+  out += "  <hr/><div class='pull-left' style='width:40%'><h4>Details:</h4><div id='accordion'>";
+  out += result.actors.length > 0 ? "<h3>"+ $.i18n("actors") + "</h3><div><ul><li>" + result.actors.join("</li><li>") + "</li></ul></div>" : "";
+  out += result.directed_by.length > 0 ? "<h3>" + $.i18n("directed_by") + "</h3><div><ul class='inline'><li>" + result.directed_by.join("</li><li>") + "</li></ul></div>" : "";
+  out += result.genre.length > 0 ? "<h3>" + $.i18n("genre") + "</h3><div><ul class='inline'><li>" + result.genre.join("</li><li>") + "</li></ul></div>" : "";
+  out += result.initial_release_date ? "  <h3>" + $.i18n("released") + "</h3><div>" + result.initial_release_date + "</div>" : "";
+  out += result.written_by.length > 0 ? "<h3>" + $.i18n("written by") + "</h3><div><ul class='inline'><li>" + result.written_by.join("</li><li>") + "</li></ul></div>" : "";
+  out += "</div></div>";
   if (result.my_movie){
     out += "<span id='usercontent'></span>"
     get_usercontent(result._id.$oid);
