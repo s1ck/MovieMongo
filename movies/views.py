@@ -36,7 +36,6 @@ mediator.add_wrapper(FreebaseWrapper())
 mediator.add_wrapper(IMDBWrapper())
 #mediator.add_wrapper(LMDBWrapper())
 
-
 @route('/media/:path#.+#', name='static')
 def static(path):
     """
