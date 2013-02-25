@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from SPARQLWrapper import SPARQLWrapper, JSON
+import socket
+from urllib2 import URLError
 
 from movies.wrappers.base import BaseWrapper
 
@@ -57,6 +59,11 @@ class LMDBWrapper(BaseWrapper):
         SELECT ?sameAs
         WHERE {<%s> <http://www.w3.org/2002/07/owl#sameAs> ?sameAs.}'''
 
+        # query to get foaf:homepage links of a movie resource
+        self.query_foafhomepage = '''
+        SELECT ?foafhomepage
+        WHERE {<%s> <http://xmlns.com/foaf/0.1/page> ?foafhomepage.}'''
+
     def get_name(self):
         return self.name
 
@@ -68,7 +75,10 @@ class LMDBWrapper(BaseWrapper):
 
         # get movie resources via SPARQL query
         self.endpoint.setQuery(self.query_movie % name)
-        sparql_res = self.endpoint.query().convert()
+        try:
+            sparql_res = self.endpoint.query().convert()
+        except (socket.error, URLError):
+            return {'result': []}
 
         movies = []
         for res in sparql_res['results']['bindings']:
@@ -114,7 +124,7 @@ class LMDBWrapper(BaseWrapper):
             'genre': []
         }
 
-        links = self._query_sameAs(uri)
+        links = self._query_links(uri)
         if links is not None and len(links) > 0:
             movie['links'] = []
             for link in links:
@@ -123,7 +133,10 @@ class LMDBWrapper(BaseWrapper):
 
     def _query_title(self, uri):
         self.endpoint.setQuery(self.query_title % uri)
-        sparql_res = self.endpoint.query().convert()
+        try:
+            sparql_res = self.endpoint.query().convert()
+        except (socket.error, URLError):
+            return None
 
         bindings = sparql_res['results']['bindings']
         if len(bindings) > 0:
@@ -139,7 +152,10 @@ class LMDBWrapper(BaseWrapper):
 
     def _query_year(self, uri):
         self.endpoint.setQuery(self.query_release_date % uri)
-        sparql_res = self.endpoint.query().convert()
+        try:
+            sparql_res = self.endpoint.query().convert()
+        except (socket.error, URLError):
+            return None
 
         bindings = sparql_res['results']['bindings']
         if len(bindings) > 0:
@@ -158,7 +174,10 @@ class LMDBWrapper(BaseWrapper):
 
     def _query_director(self, uri):
         self.endpoint.setQuery(self.query_director % uri)
-        sparql_res = self.endpoint.query().convert()
+        try:
+            sparql_res = self.endpoint.query().convert()
+        except (socket.error, URLError):
+            return []
 
         directors = []
         bindings = sparql_res['results']['bindings']
@@ -171,7 +190,10 @@ class LMDBWrapper(BaseWrapper):
 
     def _query_director_name(self, uri):
         self.endpoint.setQuery(self.query_director_name % uri)
-        sparql_res = self.endpoint.query().convert()
+        try:
+            sparql_res = self.endpoint.query().convert()
+        except (socket.error, URLError):
+            return None
 
         bindings = sparql_res['results']['bindings']
         if len(bindings) > 0:
@@ -183,7 +205,10 @@ class LMDBWrapper(BaseWrapper):
 
     def _query_writers(self, uri):
         self.endpoint.setQuery(self.query_writer % uri)
-        sparql_res = self.endpoint.query().convert()
+        try:
+            sparql_res = self.endpoint.query().convert()
+        except (socket.error, URLError):
+            return []
 
         bindings = sparql_res['results']['bindings']
         writers = []
@@ -196,7 +221,10 @@ class LMDBWrapper(BaseWrapper):
 
     def _query_writer_name(self, uri):
         self.endpoint.setQuery(self.query_writer_name % uri)
-        sparql_res = self.endpoint.query().convert()
+        try:
+            sparql_res = self.endpoint.query().convert()
+        except (socket.error, URLError):
+            return None
 
         bindings = sparql_res['results']['bindings']
         if len(bindings) > 0:
@@ -208,7 +236,10 @@ class LMDBWrapper(BaseWrapper):
 
     def _query_actors(self, uri):
         self.endpoint.setQuery(self.query_actor % uri)
-        sparql_res = self.endpoint.query().convert()
+        try:
+            sparql_res = self.endpoint.query().convert()
+        except (socket.error, URLError):
+            return []
 
         bindings = sparql_res['results']['bindings']
         actors = []
@@ -221,7 +252,10 @@ class LMDBWrapper(BaseWrapper):
 
     def _query_actor_name(self, uri):
         self.endpoint.setQuery(self.query_actor_name % uri)
-        sparql_res = self.endpoint.query().convert()
+        try:
+            sparql_res = self.endpoint.query().convert()
+        except (socket.error, URLError):
+            return None
 
         bindings = sparql_res['results']['bindings']
 
@@ -236,9 +270,13 @@ class LMDBWrapper(BaseWrapper):
         # since there are no genres in lmdb, yet
         return None
 
-    def _query_sameAs(self, uri):
+    def _query_links(self, uri):
+        # same as links
         self.endpoint.setQuery(self.query_sameAs % uri)
-        sparql_res = self.endpoint.query().convert()
+        try:
+            sparql_res = self.endpoint.query().convert()
+        except (socket.error, URLError):
+            return []
 
         bindings = sparql_res['results']['bindings']
         links = []
@@ -246,4 +284,17 @@ class LMDBWrapper(BaseWrapper):
             link = binding['sameAs']['value']
             if link.startswith('http://dbpedia.org'):
                 links.append({'target': 'dbpedia', 'value': link})
+
+        # url links
+        self.endpoint.setQuery(self.query_foafhomepage % uri)
+        sparql_res = self.endpoint.query().convert()
+        bindings = sparql_res['results']['bindings']
+
+        for binding in bindings:
+            link = binding['foafhomepage']['value']
+            if link.startswith('http://www.freebase.com'):
+                links.append({'target': 'freebase', 'value': link})
+            elif link.startswith('http://www.imdb.com/'):
+                links.append({'target': 'imdb', 'value': link})
+
         return links
