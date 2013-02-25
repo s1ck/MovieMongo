@@ -27,10 +27,14 @@ class IMDBWrapper(BaseWrapper):
         #  ...
         movies = []
         for result in results:
-            if result['kind'] not in ['movie', 'tv movie']:
-                continue
             movie_id = result.movieID
+            if result['kind'] not in ['movie', 'tv movie'] or \
+                    movie_id in exclude_ids:
+                continue
+
+            # this will take a long long time to finish
             movie = self.__db.get_movie(movie_id)
+
             movies.append(movie)
         return self._normalize(movies)
 
