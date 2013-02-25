@@ -21,9 +21,25 @@ class Mediator(object):
     def get_films_by_name(self, name):
         films = {}
         films['result'] = []
+        exclusion = {}
 
-        for wrapper in self._wrappers.values():
-            films['result'] += wrapper.get_films_by_name(name)['result']
+        # exclude already existing films from search
+        if 'mongodb' in self._wrappers.keys():
+            mongo_wrapper = self._wrappers['mongodb']
+            films['result'] += mongo_wrapper.get_films_by_name (name)['result']
+            for film in films['result']:
+                if film['source'] not in exclusion.keys ():
+                    exclusion[film['source']] = [film['source_id']]
+                else:
+                    exclusion[film['source']].append (film['source_id'])
+
+        for k,v in self._wrappers.iteritems ():
+            if k is not 'mongodb':
+                if k not in exclusion.keys ():
+                    films['result'] += v.get_films_by_name (name)['result']
+                else:
+                    films['result'] += v.get_films_by_name (name,
+                            exclusion[k])['result']
 
         # stage 1: store non exisiting films in the database
         self.store_films(films['result'])
