@@ -186,10 +186,3 @@ def login():
 @route('/logout')
 def logout():
     aaa.logout()
-
-
-@route('/i18ntest')
-def i18n_test():
-    t1 = _('test1')
-    t2 = _('test2')
-    return '%s %s' % (t1, t2)

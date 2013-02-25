@@ -4,12 +4,29 @@
 		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js" ></script>
 		<script type="text/javascript" src="/media/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="/media/js/helpers.js"></script>
+
+		<!-- i18n -->
+		<script src="/media/js/i18n/jquery.i18n.js"></script>
+		<script src="/media/js/i18n/jquery.i18n.messages.js"></script>
+		<script src="/media/js/i18n/jquery.i18n.fallbacks.js"></script>
+		<script src="/media/js/i18n/jquery.i18n.parser.js"></script>
+		<script src="/media/js/i18n/jquery.i18n.emitter.js"></script>
+		<script src="/media/js/i18n/jquery.i18n.language.js"></script>
+
 		<link href="/media/css/bootstrap.min.css" rel="stylesheet" media="screen" />
 		<link rel="stylesheet" href="media/css/font-awesome.css" />
 		<link type="text/css" rel="stylesheet" href="/media/css/style.css" media="screen"/>
 
+		<link rel="localization" hreflang="en" href="/media/js/i18n/languages/en.json" type="application/l10n+json"/>
+		<link rel="localization" hreflang="de" href="/media/js/i18n/languages/de.json" type="application/l10n+json"/>
+		
 		<title>MovieMongo</title>
 
+		<script type="text/javascript">
+		    var i18n = $.i18n();
+		    var lang = navigator.language || navigator.userLanguage;
+		    i18n.locale = lang;
+		</script>
 		{% block extra_head %}{% endblock %}
 	</head>
 
@@ -29,7 +46,7 @@
 		  <ul class="nav pull-right">
 		    {% if user %}
 		    <li><a href="#" title="Profile"><i class="icon-user"></i>{{user}}</a></li>
-		    <li><a href="/logout">Logout</a></li>
+		    <li><a href="/logout"><script> document.write($.i18n("Logout")) </script></a></li>
 		    {% endif %}
 		  </ul>
 		</div>

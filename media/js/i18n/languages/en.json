@@ -1,0 +1,4 @@
+{
+    "no films": "you have no films in your collection",
+    "search help": "The searchbar provides some special keywords.<br/>Supported keywords are: <code>actor</code>, <code>director</code>, <code>year</code>.<br/>You can use it like this: 'actor:Paul' searches for all movies in <strong>your collection</strong> that provides an actor with a name like 'Paul'."
+}

@@ -7,12 +7,8 @@
     $("#info").popover({
       html: true,
       placement: "bottom",
-      title: "Help",
-      content: "The searchbar provides some special keywords.<br/>"
-	+ "Supported keywords are: <code>actor</code>, <code>director</code>, <code>year</code>.<br/>"
-	+ "You can use it like this: 'actor:Paul' searches for all "
-	+ "movies in <strong>your collection</strong> that provides "
-	+ "an actor with a name like 'Paul'.",
+      title: $.i18n("Help"),
+      content: $.i18n("search help"),
       trigger: 'hover'
     });
         
@@ -58,7 +54,7 @@
 	success: function(data){
 	  data = jQuery.parseJSON(data);
 	  if (data.length == 0)
-	    $("#results").append("<div class='well well-small'><p class='lead'><i class='icon-warning-sign'></i> you have no films in your collection</p></div>");
+	    $("#results").append("<div class='well well-small'><p class='lead'><i class='icon-warning-sign'></i> " + $.i18n("no films") + "</p></div>");
 	  else{
 	    $("#results").append("<ul class='media-list'>");
 	    for (result in data){
@@ -77,10 +73,12 @@
 
 {% block navbar_extra %}
 <div class="btn-group input-append">
-  <button class="btn" id="mymovies" title="My movies"><i class="icon-home"></i></button>&nbsp;
+  <script>document.write('<button class="btn" id="mymovies" title="' + $.i18n("My movies") + '">')</script>
+  <i class="icon-home"></i></button>&nbsp;
   <form id="search" class="navbar-form" style="display:inline">
     <div class="btn-group input-append" style="display:inline;margin-left:10px;">
-      <input type="text" id="searchterm" class="xxlarge" placeholder="Search for movie..." />
+      <script> document.write('<input type="text" id="searchterm" class="xxlarge" placeholder="' + $.i18n("Search for movie...") + '"/>')
+      </script>
       <button type="submit" class="btn btn-success">
 	<i class="icon-search"></i>
       </button>

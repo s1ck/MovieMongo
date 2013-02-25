@@ -77,7 +77,20 @@ class IMDBWrapper(BaseWrapper):
             elif result.get('full-size cover url') is not None:
                 normalized_res['img_url'] = result['full-size cover url']
 
+            # make sure all required fields are in the result dictionary
+            required_single_value_fields = ['name', 'img_url']
+            for field in required_single_value_fields:
+                if normalized_res.get(field, 'non-existent') is 'non-existent':
+                    normalized_res[field] = None
+
+            required_multi_value_fields = ['actors', 'directed_by',
+                    'genre', 'written_by']
+            for field in required_multi_value_fields:
+                if normalized_res.get(field, 'non-existent') is 'non-existent':
+                    normalized_res[field] = []
+
             normalized_results.append(normalized_res)
+
         return {'result': normalized_results}
 
     def _resolve_person_names(self, persons):

@@ -1,0 +1,18 @@
+{
+    "actors": "Schauspieler",
+    "directed_by": "Regisseur",
+    "genre": "Genre",
+    "released": "Veröffentlichung",
+    "written by": "Autor",
+    "Source": "Quelle",
+    "other sources": "weitere Quellen",
+    "Logout": "Abmelden",
+    "User content": "Eigene Daten",
+    "no films": "Sie besitzen noch keine Filme in Ihrer Sammlung",
+    "Search for movie...": "Nach Filmen suchen...",
+    "Add movie to collection": "Diesen Film zur Sammlung hinzufügen",
+    "Remove movie from collection": "Diesen Film aus der Sammlung entfernen",
+    "My movies": "Meine Filme",
+    "search help": "Die Suchleiste erkennt einige spezielle Schlüsselwörter.<br/>Unterstütze Schlüsselwörter sind: <code>actor</code>, <code>director</code>, <code>year</code>.<br/>Benutzt werden können sie so: 'actor:Paul' sucht nach allen Filen in <strong>ihrer Sammlung</strong> die einen Schauspieler mit einem Namen wie 'Paul' besitzen.",
+    "Help": "Hilfe"
+}
