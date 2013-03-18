@@ -1,16 +1,18 @@
 MovieMongo
 ==========
 
-MovieMongo is a small web application to manage movies which are integrated from
-different datasources (like DBPedia, freebase or IMDB). Users can register and
-add movies to their personal movies list. The backend acts as a caching layer
-for search requests and builds same-as links based on given information.
+MovieMongo is a small web application based on MongoDB. It manages movies which
+are integrated from different datasources (like DBPedia, freebase or IMDB).
+Users can register and add movies to their personal movies list. The backend
+acts as a caching layer for search requests and builds same-as links based on
+given information.
 
 Movies are integrated refering to a canonical schema. Additional information is
 also stored. User can add own information by using simple key-value data fields.
 
 The project was developed during a practical course at the University of Leipzig
-in 2012/13.
+in 2012/13. Our goal was to work with different linked open data sources and
+MongoDB as a storage layer for unstructured data.
 
 Config
 ------
